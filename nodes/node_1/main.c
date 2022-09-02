@@ -1,4 +1,4 @@
-
+#include "stdbool.h"
 #include "stdio.h"
 #include "avr/iom162.h"
 #include "uart.h"
