@@ -7,7 +7,7 @@ void main(){
 	
 	USART_Init();
 	
-	while(1){
+	while(true){
 		
 		USART_Transmit("A");
 		
