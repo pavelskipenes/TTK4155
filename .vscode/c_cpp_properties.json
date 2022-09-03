@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/avr/include/", // arch
+                "/lib/avr/include" // ubuntu
+            ],
+            "defines": [
+                "__AVR_ATmega162__",
+                "F_CPU=4912500UL"
+            ],
+            "compilerPath": "/usr/bin/avr-gcc",
+            "cStandard": "c11",
+            "intelliSenseMode": "linux-gcc-x64"
+        },
+        {
+            // TODO: add windows compiler path
+            // TODO: add arm lib path
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "__AVR_ATmega162__",
+                "F_CP=4912500UL"
+            ],
+            "cStandard": "c11" 
+        }
+    ],
+    "version": 4
+}
