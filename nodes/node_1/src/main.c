@@ -2,17 +2,16 @@
 #include <util/delay.h>
 
 #include "gpio.h"
-
-#define DELAY 1000 // one second
+#include "usart.h"
 
 int main()
 {
+    usart_init(9600);
     DDRB = (GPIO_OUTPUT << DDB0);
+
+    usart_send_string("Epstein didn't kill himself\n");
     while (true)
     {
-        PORTB = (GPIO_LOW << PB0);
-        _delay_ms(DELAY);
-        PORTB = (GPIO_HIGH << PB0);
-        _delay_ms(DELAY);
+        _delay_ms(1000);
     }
 }
