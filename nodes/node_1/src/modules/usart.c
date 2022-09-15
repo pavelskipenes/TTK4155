@@ -1,9 +1,10 @@
-#include <avr/io.h>
-
 #include "usart.h"
 
-void usart_init(uint16_t baud_rate)
+#include <avr/io.h>
+
+FILE *usart_init(uint16_t baud_rate)
 {
+
     const uint16_t my_ubrr = F_CPU / 16 / (baud_rate - 1);
 
     UBRR0H = (uint8_t)(my_ubrr >> 8);
@@ -19,21 +20,37 @@ void usart_init(uint16_t baud_rate)
     UCSR0C = (1 << URSEL0) | (0 << UMSEL0) | (1 << UPM01) | (0 << USBS0) | (3 << UCSZ00);
 
     // enable transmit on USART0
-    UCSR0B = (1 << TXEN0); // | (1<<RXEN0);
-}
-void usart_send_string(char *string)
-{
-    while (*string)
-    {
-        usart_send_char(*string++);
-    }
-    usart_send_char('\0');
+    UCSR0B = (1 << TXEN0) | (1 << RXEN0);
+
+    usart_flush_receive_buffer();
+
+    return fdevopen(usart_put_char, usart_get_char);
 }
 
-void usart_send_char(char character)
+int usart_put_char(char character, FILE *fd __attribute__((unused)))
 {
     // if UDRE0 bit inside UCSRA0 register is set then transmission can begin
     while (!(UCSR0A & (1 << UDRE0)))
         ;
     UDR0 = character;
+    return 0;
+}
+
+int usart_get_char(FILE *fd __attribute__((unused)))
+{
+    return usart_read_char();
+}
+
+void usart_flush_receive_buffer()
+{
+    char _ __attribute__((unused));
+    while (UCSR0A & (1 << RXC0))
+        _ = UDR0;
+}
+
+char usart_read_char()
+{
+    while (!(UCSR0A & (1 << RXC0))) // blocking function
+        ;
+    return UDR0;
 }
