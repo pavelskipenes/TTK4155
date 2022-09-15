@@ -1,0 +1,40 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "start avarice",
+            "isBackground": true,
+            "type": "process",
+            "command": "/usr/bin/avarice",
+            "args": [
+                "-4",
+                ":4242",
+                // "--ignore-initr",
+            ],
+            "echoCommand": true,
+            "presentation": {
+                // "reveal": "never",
+                // "echo": false,
+                "group": "test",
+                "showReuseMessage": false,
+                "revealProblems": "never",
+                "clear": false,
+                "focus": false,
+                "panel": "shared",
+            }
+        },
+        {
+            "label": "stop avarice",
+            "type": "process",
+            "command": "killall",
+            "args": [
+                "-INT",
+                "avarice"
+            ],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "never"
+            }
+        }
+    ]
+}
