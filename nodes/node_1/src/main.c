@@ -1,18 +1,22 @@
 #include <stdbool.h>
-#include <util/delay.h>
+#include <stdio.h>
 
-#include "gpio.h"
-
-#define DELAY 1000 // one second
+#include "usart.h"
 
 int main()
 {
-    DDRB = (GPIO_OUTPUT << DDB0);
+
+    FILE *uart0 = usart_init(9600);
+    char buffer[256] = {0};
     while (true)
     {
-        PORTB = (GPIO_LOW << PB0);
-        _delay_ms(DELAY);
-        PORTB = (GPIO_HIGH << PB0);
-        _delay_ms(DELAY);
+        printf("Listening...\n\r");
+        fgets(buffer, 30, uart0);
+        printf("received: %s\n\r", buffer);
     }
+
+    while (1)
+    {
+    }
+
 }
