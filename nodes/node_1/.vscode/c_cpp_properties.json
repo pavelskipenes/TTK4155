@@ -4,8 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/avr/include/", // arch
-                "/lib/avr/include" // ubuntu
+                "/usr/avr/include/",
+                "/lib/avr/include"
             ],
             "defines": [
                 "__AVR_ATmega162__",
@@ -16,8 +16,6 @@
             "intelliSenseMode": "linux-gcc-x64"
         },
         {
-            // TODO: add windows compiler path
-            // TODO: add arm lib path
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**"

@@ -3,9 +3,6 @@ SOURCE_DIR := src/
 BUILD_DIR := build/
 MODULES_DIR := $(SOURCE_DIR)modules/
 INCLUDE_DIR := $(MODULES_DIR)include/ /usr/avr/include/ /lib/avr/include/
-TERMINAL_EMULATOR := kgx
-DEBUG_PORT:= 42069
-
 
 PROGRAM_WITH_JTAG := yes
 NAME_EXECUTABLE := output
@@ -28,6 +25,7 @@ TARGET_DEVICE := m162
 
 CC := avr-gcc
 C_FLAGS := -O -std=c11 -mmcu=$(TARGET_CPU) -ggdb -Wall -Wextra $(INCLUDE_DIR) -D __AVR_ATmega162__ -D F_CPU=4912500UL
+
 
 .DEFAULT_GOAL := $(BUILD_DIR)$(NAME_EXECUTABLE).hex
 
@@ -63,12 +61,4 @@ clean:
 .PHONY: erase
 erase:
 	$(QUIET) avrdude -p $(TARGET_DEVICE) -c $(PROGRAMMER) -e
-	
-.PHONY: debug
-debug:
-	if pgrep avarice; then pkill avarice; fi
-	avrdude -p $(TARGET_DEVICE) -c $(PROGRAMMER) -U flash:w:$(BUILD_DIR)$(NAME_EXECUTABLE).hex:i
-	$(TERMINAL_EMULATOR) -e avarice --edbg --ignore-intr :$(DEBUG_PORT)
-	sleep 2
-	avr-gdb -iex "target remote localhost:$(DEBUG_PORT)" $(BUILD_DIR)$(NAME_EXECUTABLE).elf
-	killall -s 9 avarice
+

@@ -1,0 +1,26 @@
+{
+    "cSpell.words": [
+        "FOSC",
+        "MYUBRR",
+        "RXEN",
+        "TXEN",
+        "UBRRH",
+        "UBRRL",
+        "UCSRB",
+        "UCSRC",
+        "UCSZ",
+        "URSEL",
+        "usart",
+        "USBS"
+    ],
+    "files.associations": {
+        "delay.h": "c",
+        "usart.h": "c",
+        "stdint.h": "c",
+        "string.h": "c",
+        "gpio.h": "c",
+        "stdlib.h": "c",
+        "assert.h": "c",
+        "stdio.h": "c"
+    }
+}
