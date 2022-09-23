@@ -56,7 +56,7 @@ $(BUILD_DIR)$(NAME_EXECUTABLE).hex: $(BUILD_DIR)$(NAME_EXECUTABLE).elf | $(BUILD
 
 .PHONY: flash
 flash: $(BUILD_DIR)$(NAME_EXECUTABLE).hex
-	$(QUIET) avrdude -p $(TARGET_DEVICE) -c $(PROGRAMMER) -U flash:w:$(BUILD_DIR)$(NAME_EXECUTABLE).hex:i
+	$(QUIET) avrdude -p $(TARGET_DEVICE) -c $(PROGRAMMER) -U flash:w:$(BUILD_DIR)$(NAME_EXECUTABLE).hex:i -U lfuse:w:0xbd:m
 
 .PHONY: clean
 clean:
