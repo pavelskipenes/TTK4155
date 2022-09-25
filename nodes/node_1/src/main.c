@@ -3,12 +3,16 @@
 #include <avr/interrupt.h>
 #include "usart.h"
 #include "memory.h"
-#include "timer.h"
 #include "adc.h"
 
 ISR(BADISR_vect)
 {
-    printf("bad int received GIFR: 0x%x\n", GIFR);
+    printf("error: received unhandled interrupt\nhalting\n");
+    // halt
+    while (true)
+    {
+        __asm__ __volatile__("nop");
+    }
 }
 
 int main()
@@ -25,9 +29,9 @@ int main()
     {
         adc_values = adc_read();
         printf("acd channel 0: 0x%x\n", adc_values.channel_0);
-        printf("acd channel 1: 0x%x\n", adc_values.channel_1);
-        printf("acd channel 2: 0x%x\n", adc_values.channel_2);
-        printf("acd channel 3: 0x%x\n", adc_values.channel_3);
+        // printf("acd channel 1: 0x%x\n", adc_values.channel_1);
+        // printf("acd channel 2: 0x%x\n", adc_values.channel_2);
+        // printf("acd channel 3: 0x%x\n", adc_values.channel_3);
         // printf("Listening...\n\r");
         // fgets(buffer, 30, uart0);
         // printf("received: %s\n\r", buffer);
