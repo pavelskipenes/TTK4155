@@ -12,6 +12,12 @@ void memory_init()
     SFIOR |= (1 << XMM2); // mask JTAG ports PORTC 7:4
 }
 
+void memory_add_delay()
+{
+    // insert wait states when interacting with slow periferals
+    EMCUCR |= (1 << SRW01) | (1 << SRW00);
+}
+
 void memory_test()
 {
     printf("starting memory test...\n\r");

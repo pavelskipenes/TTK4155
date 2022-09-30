@@ -1,10 +1,12 @@
-#include "adc.h"
-#include "memory.h"
-#include "timer.h"
-#include "usart.h"
 #include <avr/interrupt.h>
 #include <stdbool.h>
 #include <stdio.h>
+
+#include "adc.h"
+#include "memory.h"
+#include "oled.h"
+#include "timer.h"
+#include "usart.h"
 
 ISR(BADISR_vect)
 {
@@ -23,6 +25,8 @@ int main()
     memory_test();
     adc_init();
 
+    FILE *oled = oled_init();
+    fprintf(oled, "fuck\nfuck");
     while (true)
     {
         channel_values adc_values = adc_read();
