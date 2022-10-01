@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 #include "gpio.h"
-#include <avr/io.h>
 
 void timer_enable_perif_clock()
 {

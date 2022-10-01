@@ -25,8 +25,8 @@ int main()
     memory_test();
     adc_init();
 
-    FILE *oled = oled_init();
-    fprintf(oled, "fuck\nfuck");
+    oled_init();
+    printf("fuck\nfuck");
     while (true)
     {
         channel_values adc_values = adc_read();

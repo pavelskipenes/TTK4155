@@ -5,16 +5,9 @@
 #include <util/delay.h>
 #include <stdlib.h>
 
-#define OLED_NUM_COLUMNS_PER_PAGE 8
-#define OLED_NUM_PAGES 8
-#define OLED_NUM_SEGMENTS_PER_PAGE 128
-#define OLED_SEGMENTS_PER_CHAR 8
-
-static int oled_put_char8(char c, FILE *fd __attribute__((unused)));
 static void oled_carriage_return();
 static void oled_reset_page_counter();
 static void oled_reset_cursor();
-// static void oled_new_line_feed();
 static void write_c(uint8_t command_byte);
 static volatile uint8_t *oled_cmd = (volatile uint8_t *)0x1000;
 static volatile uint8_t *oled_data = (volatile uint8_t *)0x1200;
@@ -27,7 +20,7 @@ void oled_flush()
     }
 }
 
-FILE *oled_init()
+void oled_init()
 {
     memory_init();
     memory_add_delay();
@@ -57,14 +50,7 @@ FILE *oled_init()
     write_c(0x20);
     write_c(0x00);
 
-    // Start column = 0; end column = 127
-    write_c(0x21);
-    write_c(0x00);
-    write_c(127);
-    // start page = 0; end page = 7
-    write_c(0x22);
-    write_c(0x00);
-    write_c(7);
+    oled_reset_cursor();
 
     // start reading at RAM address = 0;
     write_c(0x40);
@@ -84,38 +70,13 @@ FILE *oled_init()
 
     oled_flush();
 
-    return fdevopen(oled_put_char8, NULL);
+    return;
 }
 
 static void write_c(uint8_t command_byte)
 {
     *oled_cmd = command_byte;
 }
-
-static int oled_put_char8(char c, FILE *fd __attribute__((unused)))
-{
-    // TODO: add boundry check for c
-    switch (c)
-    {
-    case '\r':
-        oled_carriage_return();
-        return 0;
-    // case '\n':
-    //     oled_new_line_feed();
-    //     return 0;
-    default:
-        for (int segment = 0; segment < OLED_SEGMENTS_PER_CHAR; segment++)
-        {
-            *oled_data = font8[c - ' '][segment];
-        }
-        return 0;
-    }
-}
-
-// static void oled_new_line_feed()
-// {
-//     // TODO
-// }
 
 static void oled_carriage_return()
 {
