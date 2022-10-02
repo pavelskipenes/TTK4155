@@ -2,7 +2,8 @@
 SOURCE_DIR := src/
 BUILD_DIR := build/
 MODULES_DIR := $(SOURCE_DIR)modules/
-INCLUDE_DIR := $(MODULES_DIR)include/ /usr/avr/include/ /lib/avr/include/
+INCLUDE_DIR := $(MODULES_DIR)include/ 
+SYSTEM_INCLUDE := /usr/avr/include/ /lib/avr/include/
 
 PROGRAM_WITH_JTAG := yes
 NAME_EXECUTABLE := output
@@ -14,6 +15,7 @@ OBJECT_FILES := $(subst $(MODULES_DIR),$(BUILD_DIR),$(SOURCE_FILES:.c=.o))
 OBJECT_FILES := $(subst $(SOURCE_DIR),$(BUILD_DIR),$(OBJECT_FILES))
 
 INCLUDE_DIR := $(addprefix -I,$(INCLUDE_DIR))
+SYSTEM_INCLUDE := $(addprefix -isystem,$(SYSTEM_INCLUDE))
 
 PROGRAMMER := atmelice_isp # avrdude -c --help for valid options
 ifeq ($(PROGRAM_WITH_JTAG), yes)
@@ -24,8 +26,10 @@ TARGET_CPU := atmega162
 TARGET_DEVICE := m162
 
 CC := avr-gcc
-C_FLAGS := -O -std=c11 -mmcu=$(TARGET_CPU) -ggdb -Wall -Wextra $(INCLUDE_DIR) -D __AVR_ATmega162__ -D F_CPU=4912500UL
-
+DEFINES:= -D __AVR_ATmega162__ -D F_CPU=4912500UL
+LD_OPTIONS := --gc-sections
+C_OPTIONS := -Os -std=c11 -g3 -Wpadded -Wall -Wextra -Wshadow -Wdouble-promotion -Wformat=2 -Wundef -fno-common -Wconversion -fstack-usage -Wstack-usage=255 -ffunction-sections -fdata-sections -Werror
+C_FLAGS := $(INCLUDE_DIR) $(SYSTEM_INCLUDE) -mmcu=$(TARGET_CPU) $(DEFINES) -Wl,$(LD_OPTIONS) $(C_OPTIONS)
 
 .DEFAULT_GOAL := $(BUILD_DIR)$(NAME_EXECUTABLE).hex
 
@@ -49,6 +53,10 @@ $(BUILD_DIR)$(NAME_EXECUTABLE).elf: $(OBJECT_FILES)
 $(BUILD_DIR)$(NAME_EXECUTABLE).hex: $(BUILD_DIR)$(NAME_EXECUTABLE).elf | $(BUILD_DIR)
 	$(QUIET) echo converting binary
 	$(QUIET) avr-objcopy -j .text -j .data -O ihex $< $@
+
+.PHONY: check
+check:
+	cppcheck $(DEFINES) $(SOURCE_FILES) --enable=all $(INCLUDE_DIR) --std=c11
 
 .PHONY: flash
 flash: $(BUILD_DIR)$(NAME_EXECUTABLE).hex
