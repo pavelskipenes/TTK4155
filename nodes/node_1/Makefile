@@ -68,4 +68,4 @@ erase:
 
 .PHONY: check
 check:
-	cppcheck --enable=all $(SOURCE_FILES) $(INCLUDE_DIR)
+	cppcheck --enable=all $(SOURCE_FILES) $(INCLUDE_DIR) --language=c --platform=avr8 -q $(DEFINES)
