@@ -8,8 +8,11 @@
  * 
  * @copyright Copyright Pavel Skipenes (c) 2022
  * 
- * ADC is configured in hard wired mode, 4 channel unipolar convertion.
- * Connection details is in figure 8a on page 16 in the datasheet. 
+ * ADC is configured in hard wired mode, 8 channel, Single-Ended, Unipolar Conversion.
+ * Connection details is in figure 8b on page 16 in the datasheet.
+ * One slight difference: REFIN is connected to 5v.
+ * 
+ * ADC BUSY pin is connected back to MCU on pin PE0 
  * 
  */
 
@@ -17,13 +20,10 @@
 static int const ADC_NUM_CHANNELS = 4;
 
 typedef struct channels_value_t{
-    uint8_t channel_0;
-    uint8_t channel_1;
-    uint8_t channel_2;
-    uint8_t channel_3;
-} channel_value;
+    uint8_t channel[4];
+} channel_values;
 
 void adc_init();
 
-channel_value adc_read();
+channel_values adc_read();
 

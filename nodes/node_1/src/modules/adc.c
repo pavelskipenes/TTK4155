@@ -12,9 +12,10 @@ static volatile bool adc_busy = true;
 void adc_init()
 {
     timer_enable_perif_clock();
-    // enable interrupt on PE0 on rising edge page 84
     cli();
+    // External Interrupt Request 2 Enable page 84
     GICR |= (1 << INT2);
+    // Interrupt on rising edge page 85
     EMCUCR |= (1 << ISC2);
     sei();
 }
@@ -24,7 +25,7 @@ ISR(INT2_vect)
     adc_busy = false;
 }
 
-channel_value adc_read()
+channel_values adc_read()
 {
     // write to adc starts a sample
     *ADC_ADDRESS = 69;
@@ -36,9 +37,10 @@ channel_value adc_read()
     };
     adc_busy = false;
 
-    return (channel_value){
-        *ADC_ADDRESS,
-        *ADC_ADDRESS,
-        *ADC_ADDRESS,
-        *ADC_ADDRESS};
+    return (channel_values){
+        .channel[0] = *ADC_ADDRESS,
+        .channel[1] = *ADC_ADDRESS,
+        .channel[2] = *ADC_ADDRESS,
+        .channel[3] = *ADC_ADDRESS
+        };
 }
