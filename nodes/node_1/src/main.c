@@ -24,14 +24,11 @@ int main()
     adc_init();
 
     char buffer[256] = {0};
-    channel_value adc_values = {0};
+    channel_values adc_values = {0};
     while (true)
     {
         adc_values = adc_read();
-        printf("acd channel 0: 0x%x\n", adc_values.channel_0);
-        // printf("acd channel 1: 0x%x\n", adc_values.channel_1);
-        // printf("acd channel 2: 0x%x\n", adc_values.channel_2);
-        // printf("acd channel 3: 0x%x\n", adc_values.channel_3);
+        printf("acd channel 0: 0x%x\n", adc_values.channel[0]);
         // printf("Listening...\n\r");
         // fgets(buffer, 30, uart0);
         // printf("received: %s\n\r", buffer);
