@@ -1,13 +1,36 @@
 #include "gpio.h"
 
-// this will not work because _MMIO_BYTE macro inside avr/sfr_defs.h dereferences all addresses making it impossible to pass it around as an address
+#include <assert.h>
 
-// void gpio_set_direction(volatile uint8_t *direction_register_addr, uint8_t data_direction_bit_field, bool state)
-// {
-//     *direction_register_addr = (state << data_direction_bit_field);
-// }
-// 
-// void gpio_set_output(volatile uint8_t* port_addr, uint8_t pin_bit_field, bool direction)
-// {
-//     *port_addr = (direction << pin_bit_field);
-// }
+void gpio_set(GPIO *gpio, enum gpio_state state)
+{
+    assert(gpio->pin >= 0);
+    assert(gpio->pin < 8);
+    if (state)
+    {
+        *(gpio->port) |= (GPIO_HIGH << gpio->pin);
+    }
+    else
+    {
+        *(gpio->port) &= ~(GPIO_LOW << gpio->pin);
+    }
+}
+
+void gpio_direction(GPIO *gpio, enum gpio_direction direction)
+{
+    assert(gpio->pin >= 0);
+    assert(gpio->pin < 8);
+    if (direction == GPIO_OUTPUT)
+    {
+        *(gpio->ddr) |= (GPIO_OUTPUT << gpio->pin);
+    }
+    else
+    {
+        *(gpio->ddr) &= ~(GPIO_INPUT << gpio->pin);
+    }
+}
+
+void gpio_toggle(GPIO *gpio)
+{
+    *(gpio->port) ^= (1 << gpio->pin);
+}
