@@ -1,8 +1,26 @@
 #pragma once
-#include <avr/io.h>
+#include <stdbool.h>
+#include <stdint.h>
 
-#define GPIO_OUTPUT 1
-#define GPIO_INPUT 0
+enum gpio_direction
+{
+    GPIO_INPUT,
+    GPIO_OUTPUT
+};
 
-#define GPIO_HIGH 1
-#define GPIO_LOW 0
+enum gpio_state
+{
+    GPIO_LOW,
+    GPIO_HIGH
+};
+
+typedef struct GPIO_t
+{
+    int pin;
+    volatile uint8_t *ddr;
+    volatile uint8_t *port;
+} GPIO;
+
+void gpio_set(GPIO *gpio, enum gpio_state state);
+void gpio_direction(GPIO *gpio, enum gpio_direction direction);
+void gpio_toggle(GPIO *gpio);
