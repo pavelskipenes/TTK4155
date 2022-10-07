@@ -1,13 +1,14 @@
 #include "fb.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <util/atomic.h>
+// #include <signal.h>
+#include <stdbool.h>
 #include <stdio.h>
-#include <assert.h>
-#include <signal.h>
 
-#include "oled.h"
 #include "fonts.h"
+#include "oled.h"
 
 #define FB_FRONT 0
 #define FB_BACK 1
@@ -22,7 +23,7 @@ typedef struct fb_t
     page page[OLED_NUM_PAGES];
     int cursor_page;
     int cursor_segment;
-}fb;
+} fb;
 
 typedef struct fb_buffers
 {
@@ -44,22 +45,32 @@ static void fb_reset_segment_counter(fb *);
 
 FILE *fb_init()
 {
+    printf("[info]: creating frame buffer\n");
     oled_init();
-    fb *fb0 = (fb *)calloc(sizeof(fb), 1);
-    fb *fb1 = (fb *)calloc(sizeof(fb), 1);
-    assert(fb0);
-    assert(fb1);
+
+    printf("[info]: attempting to allocate %d\n", sizeof(fb));
+    fb *fb0 = (fb *)calloc(1, sizeof(fb));
+    fb *fb1 = (fb *)calloc(1, sizeof(fb));
+    assert(fb0 && "failed to allocate memory for frame buffer");
+    assert(fb1 && "failed to allocate memory for frame buffer");
+
     FILE *fd = fdevopen(fb_put_char8, NULL);
+    assert(fd && "failed to create stream");
+
     if (fdev_get_udata(fd) == (fb_buffers *)NULL)
     {
-        fdev_set_udata(fd, calloc(sizeof(fb_buffers), 1));
+        fb_buffers *buffers = calloc(sizeof(fb_buffers), 1);
+        assert(buffers && "failed to allocate memory for frame buffer container");
+        fdev_set_udata(fd, buffers);
+
         fb_buffers *buffer = (fb_buffers *)fdev_get_udata(fd);
-        assert(buffer);
-        buffer->frame_buffers[0] = fb0;
-        buffer->frame_buffers[1] = fb1;
+        assert(buffer && "failed to get udata");
+
+        buffer->frame_buffers[FB_FRONT] = fb0;
+        buffer->frame_buffers[FB_BACK] = fb1;
     }
 
-    // start oled write interrupts
+    // TODO(pavel): start oled write interrupts
 
     return fd;
 }
@@ -129,30 +140,31 @@ static int fb_put_char8(char c, FILE *fd)
     assert(fd);
     assert(c - ' ' >= 0);
     assert(c - ' ' < 95);
-    fb_buffers *buffers = (fb_buffers *)fdev_get_udata(fd);
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
-    {
-        fb *fb_back = buffers->frame_buffers[FB_BACK];
-
-        switch (c)
-        {
-        case '\n':
-            fb_increment_page_counter(fb_back);
-            break;
-
-        case '\r':
-            fb_reset_segment_counter(fb_back);
-            break;
-        case '\t':
-            for (int i = 0; i < 4; i++)
-            { // always 4 spaces in a tab. Always
-                fb_put_char8(' ', fd);
-            }
-            break;
-
-        default:
-            fb_write8(fonts_get_char8(c), fb_back);
-        }
-    }
+    // #error "results in run time error when included in transaction unit"
+    // fb_buffers *buffers = (fb_buffers *)fdev_get_udata(fd);
+    // ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    // {
+    //     fb *fb_back = buffers->frame_buffers[FB_BACK];
+    //
+    //     switch (c)
+    //     {
+    //     case '\n':
+    //         fb_increment_page_counter(fb_back);
+    //         break;
+    //
+    //     case '\r':
+    //         fb_reset_segment_counter(fb_back);
+    //         break;
+    //     case '\t':
+    //         for (int i = 0; i < 4; i++)
+    //         { // always 4 spaces in a tab. Always
+    //             fb_put_char8(' ', fd);
+    //         }
+    //         break;
+    //
+    //     default:
+    //         fb_write8(fonts_get_char8(c), fb_back);
+    //     }
+    // }
     return 0;
 }

@@ -16,7 +16,6 @@
             "cwd": "${workspaceRoot}",
             "gdbpath": "/usr/bin/avr-gdb",
             "autorun": [
-                "interrupt",
                 "break main",
                 "monitor reset"
             ]

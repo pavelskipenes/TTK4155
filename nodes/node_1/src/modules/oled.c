@@ -1,9 +1,10 @@
 #include "oled.h"
-#include "memory.h"
 #include "fonts.h"
+#include "memory.h"
 
-#include <util/delay.h>
+#include <stdbool.h>
 #include <stdlib.h>
+#include <util/delay.h>
 
 static void oled_carriage_return();
 static void oled_reset_page_counter();
@@ -22,6 +23,14 @@ void oled_flush()
 
 void oled_init()
 {
+    static bool initialized = false;
+    if (initialized)
+    {
+        return;
+    }
+    initialized = true;
+    printf("[info]: initializing oled\n");
+
     memory_init();
     memory_add_delay();
 
