@@ -9,7 +9,8 @@
             ],
             "defines": [
                 "__AVR_ATmega162__",
-                "F_CPU=4912500UL"
+                "F_CPU=4912500UL",
+                "__ASSERT_USE_STDERR"
             ],
             "compilerPath": "/usr/bin/avr-gcc",
             "cStandard": "c11",
