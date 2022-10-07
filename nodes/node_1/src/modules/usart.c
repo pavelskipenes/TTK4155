@@ -5,7 +5,7 @@
 FILE *usart_init(uint16_t baud_rate)
 {
 
-    const uint16_t my_ubrr = (uint16_t)F_CPU / 16 / (baud_rate - 1);
+    const uint16_t my_ubrr = (const uint16_t)(F_CPU / 16 / (baud_rate - 1));
 
     UBRR0H = (uint8_t)(my_ubrr >> 8);
     UBRR0L = (uint8_t)(my_ubrr);

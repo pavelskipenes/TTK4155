@@ -5,6 +5,7 @@
 #include <avr/interrupt.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <util/delay.h>
 
 ISR(BADISR_vect)
 {
@@ -19,6 +20,7 @@ ISR(BADISR_vect)
 int main()
 {
 
+    usart_init(9600);
     memory_init();
     memory_test();
     adc_init();
@@ -26,6 +28,8 @@ int main()
     while (true)
     {
         channel_values adc_values = adc_read();
-        printf("acd channel 0: 0x%x\n", adc_values.channel[0]);
+
+        printf("acd 0x%X\t\t0x%X\t\t0x%X\t\t0x%X\n", adc_values.channel[0], adc_values.channel[1], adc_values.channel[2], adc_values.channel[3]);
+        _delay_ms(200);
     }
 }
