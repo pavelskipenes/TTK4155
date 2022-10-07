@@ -2,15 +2,13 @@
 #include <stdio.h>
 #include "usart.h"
 #include "memory.h"
-#include "timer.h"
 
 int main()
 {
 
-    FILE *uart0 = usart_init(9600);
     memory_init();
     memory_test();
-    timer_init_clock_signal_output();
+    FILE *uart0 = usart_init(9600);
     char buffer[256] = {0};
     while (true)
     {
