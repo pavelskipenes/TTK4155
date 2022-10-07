@@ -23,14 +23,9 @@ int main()
     memory_test();
     adc_init();
 
-    char buffer[256] = {0};
-    channel_values adc_values = {0};
     while (true)
     {
-        adc_values = adc_read();
+        channel_values adc_values = adc_read();
         printf("acd channel 0: 0x%x\n", adc_values.channel[0]);
-        // printf("Listening...\n\r");
-        // fgets(buffer, 30, uart0);
-        // printf("received: %s\n\r", buffer);
     }
 }
