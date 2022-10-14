@@ -1,16 +1,16 @@
 #include "can.h"
 #include "mcp2515.h"
-
+#include <string.h>
 
 void can_init(){
 	enum can_mode mode;
 	mode = CAN_MODE_LOOPBACK;
 	
-	uint8_t abat = 0;
+	uint8_t abat = 0u;
 	uint8_t osm = 0; 		// one-shot disabled
 	uint8_t clken = 1; 		// clkout pin enabled
 	uint8_t clkpre = 0x04; 	// fclkout = fclk/8
-	uint8_t ctrl_data = 0|(mode << 5)|(abat << 4)|(osm << 3)|(clken << 2)|(clkpre << 1);
+	uint8_t ctrl_data = (mode << 5)|(abat << 4)|(osm << 3)|(clken << 2)|(clkpre << 1);
 	
 	mcp2515_write(CANCTRL, ctrl_data);
 }
@@ -21,7 +21,7 @@ void can_tx(uint16_t id, char data[]){
 	frame.id = id;
 	frame.rtr = 1; // remote frame
 	frame.ide = 0; // standard frame
-	frame.data_length = sizeof(data);
+	frame.data_length = sizeof(frame.data);
 	
 	strcpy(frame.data, data);
 	//frame.data = data;

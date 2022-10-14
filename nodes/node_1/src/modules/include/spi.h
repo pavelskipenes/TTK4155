@@ -3,13 +3,9 @@
 #include "gpio.h"
 #include <stdint.h>
 
-struct spi_slave
-{
-    GPIO ss;
-};
 
-void spi_init_slave(struct spi_slave *slave);
+void spi_init_slave(GPIO *);
 
-uint8_t spi_send_byte(struct spi_slave *slave, uint8_t data);
+uint8_t spi_send_byte(GPIO *, uint8_t);
 
 void spi_init();

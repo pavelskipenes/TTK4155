@@ -13,21 +13,21 @@ void spi_init()
     SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR0);
 }
 
-void spi_init_slave(struct spi_slave *slave)
+void spi_init_slave(GPIO *slave)
 {
-    (*(slave->ss.ddr)) |= (GPIO_OUTPUT << slave->ss.pin);
+    *(slave->ddr) |= (GPIO_OUTPUT << (slave->pin));
 }
 
-uint8_t spi_send_byte(struct spi_slave *slave, uint8_t data)
+uint8_t spi_send_byte(GPIO *slave, uint8_t data)
 {
-    gpio_set(&(slave->ss), GPIO_LOW);
+    gpio_set(slave, GPIO_LOW);
     /* Start transmission */
     SPDR = data;
     /* Wait for transmission complete */
     while (!(SPSR & (1 << SPIF)))
     {
     };
-    gpio_set(&(slave->ss), GPIO_HIGH);
+    gpio_set(slave, GPIO_HIGH);
 
     return SPDR;
 }
