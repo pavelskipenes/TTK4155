@@ -15,23 +15,25 @@ void can_init(){
 	mcp2515_write(CANCTRL, ctrl_data);
 }
 
-void can_tx(uint16_t id, char *data[]){
+void can_tx(uint16_t id, char data[]){
 	can_frame frame;
 	
 	frame.id = id;
 	frame.rtr = 1; // remote frame
 	frame.ide = 0; // standard frame
 	frame.data_length = sizeof(data);
-	frame.data = data;
+	
+	strcpy(frame.data, data);
+	//frame.data = data;
 	frame.ack = 1; // acknowledge by receiving node
 	
 	// using TXB0
 	mcp2515_write(TXB0SIDH, frame.id); 	// standard id bits 10:3
-	mcp2515_write(TXB0SIDL, frame.ide << 3)) 			// standard id bits 2:0
+	mcp2515_write(TXB0SIDL, (frame.ide << 3));			// standard id bits 2:0
 	mcp2515_write(TXB0EID8, 0); 			// extended id bits 15:8
 	mcp2515_write(TXB0EID0, 0); 			// extended id bits 7:0
 	mcp2515_write(TXB0DLC, 0|(frame.rtr << 6)|(frame.data_length << 3));
-	mcp2515_write(TXB0D0, frame.data);
+	//mcp2515_write(TXB0D0, frame.data);
 	
 	
 	bool txb2 = 0;

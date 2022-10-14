@@ -14,9 +14,9 @@
 #define TXB1SIDH 0x41
 #define TXB2SIDH 0x51
 
-#define TCB0DISL 0X32
-#define TCB1DISL 0X42
-#define TCB2DISL 0X52
+#define TXB0SIDL 0X32
+#define TXB1SIDL 0X42
+#define TXB2SIDL 0X52
 
 #define TXB0EID8 0x33
 #define TXB1EID8 0x43
@@ -108,6 +108,6 @@ typedef struct can_frame_t
 
 void can_init();
 
-void can_tx(uint16_t, *char[]);
+void can_tx(uint16_t, char[]);
 
 can_frame can_rx();
