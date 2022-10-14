@@ -9,11 +9,8 @@
 #include <avr/pgmspace.h>
 #include <stdint.h>
 
-// Font 8x8 - Large
 extern const uint8_t font8[95][8];
-// Font 5x7 - normal
 extern const uint8_t font5[95][5];
-// Font 4x6 - Small
 extern const uint8_t font4[95][4];
 
 typedef struct character8
