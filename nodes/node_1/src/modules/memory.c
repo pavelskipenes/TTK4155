@@ -21,9 +21,6 @@ void memory_init()
     // page 32
     SFIOR |= (1 << XMM2); // mask JTAG ports PORTC 7:4
 
-    // printf("[info]: __malloc_margin: %d\n", __malloc_margin);
-    // printf("[info]: __malloc_heap_start: %s\n", __malloc_heap_start);
-    // printf("[info]: __malloc_heap_end: %s\n", __malloc_heap_end);
 }
 
 void memory_add_delay()
@@ -54,23 +51,6 @@ void memory_test()
     {
         uint8_t written_value = (uint8_t)rand();
         uint8_t read_value = sram_start[i];
-        if (read_value != written_value)
-        {
-            read_errors++;
-        }
-        else
-        {
-            read_success++;
-        }
-    }
-
-    // assert(sram_size == read_errors + read_success);
-    if (write_errors || read_errors)
-    {
-        printf("%u/%u write errors and %u/%u read errors\n\r\n\r", write_errors, sram_size, read_errors, sram_size);
-    }
-    else
-    {
-        printf("memory test ok\n\r");
+        assert(read_value == written_value);
     }
 }
