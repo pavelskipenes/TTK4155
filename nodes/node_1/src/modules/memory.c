@@ -60,7 +60,7 @@ void memory_test()
     // assert(sram_size == read_errors + read_success);
     if (write_errors || read_errors)
     {
-        printf("%d/%d write errors and %d/%d read errors\n\r\n\r", write_errors, sram_size, read_errors, sram_size);
+        printf("%u/%u write errors and %u/%u read errors\n\r\n\r", write_errors, sram_size, read_errors, sram_size);
     }
     else
     {
