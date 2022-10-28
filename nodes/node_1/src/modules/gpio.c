@@ -12,7 +12,7 @@ void gpio_set(GPIO *gpio, enum gpio_state state)
     }
     else
     {
-        *(gpio->port) &= ~(GPIO_LOW << gpio->pin);
+        *(gpio->port) &= ~(1 << gpio->pin);
     }
 }
 

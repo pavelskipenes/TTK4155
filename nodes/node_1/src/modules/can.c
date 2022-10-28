@@ -1,26 +1,32 @@
 #include "can.h"
 #include "mcp2515.h"
+
 #include <string.h>
+#include <assert.h>
 
 void can_init(){
-	enum can_mode mode;
-	mode = CAN_MODE_LOOPBACK;
+	static bool initialized = false;
+    if (initialized)
+    {
+        return;
+    }
+	
+	// enable interrupt on RX0 and RX1
+	mcp2515_write(CANINTE, 0x3);
+	
+	enum can_mode mode = CAN_MODE_LOOPBACK;
 	uint8_t abat = 0u;
 	uint8_t osm = 0; 		// one-shot disabled
 	uint8_t clken = 1; 		// clkout pin enabled
 	uint8_t clkpre = 0x04; 	// fclkout = fclk/8
 	uint8_t ctrl_data = (mode << 5)|(abat << 4)|(osm << 3)|(clken << 2)|(clkpre << 1);
+	mcp2515_write(CANCTRL, ctrl_data);
 	
 	// write to CNF	to set timing
 	//
 	
-	// enable interrupt on RX0 and RX1
-	mcp2515_write(CANINTE, 0x3);
 	
-	// start loopback mode
-	
-	mcp2515_write(CANCTRL, ctrl_data);
-	
+
 	// start normal operation mode
 	/*
 	mode = CAN_MODE_NORMAL;
@@ -82,20 +88,19 @@ void can_tx(uint16_t id, uint64_t data){
 		
 }
 
-can_frame can_rx(){
-	can_frame frame;
-	
+void can_rx(can_frame * frame){
+
 	// read CANSTAT 3:0 to find which RXB the message was loaded into
 	//
-	
-	frame.data_length = sizeof(frame.data);
 
-	for(int i = 0; i < frame.data_length; i++){
-		frame.data[i] = mcp2515_read(RXB0D0 + i);
+/*
+	for(int i = 0; i < 8; i++){
+		//frame->data[i] = mcp2515_read(RXB0D0 + i);
+		printf("\n%c", mcp2515_read(RXB0D0 + i));
 	}
+	*/
+
+	printf("\n%c", mcp2515_read(RXB0D0));
 	
 	
-	
-	
-	return frame;
 }
