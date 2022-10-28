@@ -7,6 +7,7 @@ GPIO mcp2515 = {
 
 
 void mcp2515_init(){
+	spi_init();
 	spi_init_slave(&mcp2515);
 	mcp2515_reset();
 }
