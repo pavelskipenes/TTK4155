@@ -4,6 +4,7 @@
 
 void can_init(){
 	enum can_mode mode;
+	mode = CAN_MODE_LOOPBACK;
 	uint8_t abat = 0u;
 	uint8_t osm = 0; 		// one-shot disabled
 	uint8_t clken = 1; 		// clkout pin enabled
@@ -17,7 +18,7 @@ void can_init(){
 	mcp2515_write(CANINTE, 0x3);
 	
 	// start loopback mode
-	mode = CAN_MODE_LOOPBACK;
+	
 	mcp2515_write(CANCTRL, ctrl_data);
 	
 	// start normal operation mode
@@ -53,12 +54,20 @@ void can_tx(uint16_t id, uint64_t data){
 	bool ack = 1; // acknowledge by receiving node
 	
 	// using TXB0
-	mcp2515_write(TXB0SIDH, id); 			// standard id bits 10:3
-	mcp2515_write(TXB0SIDL, (ide << 3));	// standard id bits 2:0
+	// mcp2515 page 20
+	mcp2515_write(TXB0SIDH, (uint8_t)(id >> 3)); 			// standard id bits 10:3
+	mcp2515_write(TXB0SIDL, ((id | 0x7) << 5)|(ide << 3));	// standard id bits 2:0
 	mcp2515_write(TXB0EID8, 0); 			// extended id bits 15:8
 	mcp2515_write(TXB0EID0, 0); 			// extended id bits 7:0
-	mcp2515_write(TXB0DLC, 0|(rtr << 6)|(sizeof(data) << 3));
-	mcp2515_write(TXB0D0, data);
+	mcp2515_write(TXB0DLC, (rtr << 6)|(sizeof(data) << 3));
+	
+	uint8_t buff[8];
+	(*(uint64_t*)(buff)) = data;
+	
+	for(uint8_t i = 0; i < 8; i++){
+		mcp2515_write(TXB0D0 + i, buff[i]);
+	}
+	
 	
 	
 	bool txb2 = 0;

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "gpio.h"
 
 // can control buffer
 #define CANCTRL 0x0F
@@ -80,3 +81,5 @@ void mcp2515_request_to_send(bool, bool, bool);
 uint8_t mcp2515_read_status();
 
 void mcp2515_bit_modify(uint8_t, uint8_t, bool);
+
+extern GPIO mcp2515;
