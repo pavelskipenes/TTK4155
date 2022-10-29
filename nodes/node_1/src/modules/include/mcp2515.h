@@ -29,8 +29,8 @@
 #define TXB2EID8 0x53
 
 #define TXB0EID0 0x34
-#define TXB1EID0 0x34
-#define TXB2EID0 0x34
+#define TXB1EID0 0x44
+#define TXB2EID0 0x54
 
 #define TXB0DLC 0x35
 #define TXB1DLC 0x45

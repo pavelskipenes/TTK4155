@@ -46,7 +46,7 @@ typedef struct can_frame_t
 	bool rtr;
     bool ide;
 	uint8_t data_length;
-    char data[8];
+    uint8_t data[8];
     uint8_t ack;
 } can_frame;
 
