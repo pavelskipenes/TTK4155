@@ -1,6 +1,7 @@
 #include "can.h"
 #include "mcp2515.h"
 
+#include <stdio.h>
 #include <string.h>
 #include <assert.h>
 
@@ -92,15 +93,17 @@ void can_rx(can_frame * frame){
 
 	// read CANSTAT 3:0 to find which RXB the message was loaded into
 	//
+	
+	uint8_t src = mcp2515_read(CANINTF);
+	printf("\nsrc: %X\n", src);
 
-/*
 	for(int i = 0; i < 8; i++){
-		//frame->data[i] = mcp2515_read(RXB0D0 + i);
-		printf("\n%c", mcp2515_read(RXB0D0 + i));
+		frame->data[i] = mcp2515_read(RXB0D0 + i);
+		//printf("\n%c", mcp2515_read(RXB0D0 + i));
 	}
-	*/
-
-	printf("\n%c", mcp2515_read(RXB0D0));
+	
+	// clear interrupt registers
+	mcp2515_write(CANINTF, 0);
 	
 	
 }

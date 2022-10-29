@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "spi.h"
 
 #include <avr/io.h>

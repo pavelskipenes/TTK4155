@@ -31,10 +31,12 @@ ISR(INT1_vect)
 	frame.rtr = 0;
 	frame.ide = 0;
 	frame.data_length = 8;
+	for(int i = 0; i < 8; i++) frame.data[i] = 0;
 	//frame.data = {0};
 	frame.ack = 0;
 	
 	can_rx(&frame);
+	
 	for(int i = 0; i < 8; i++){
 		printf("\ndata: %c", frame.data[i]);
 	}
@@ -64,21 +66,7 @@ int main()
     cli();
     sei();
 	
-	uint64_t data = 170;
-	/*
-	char text[] = "Hello World";
-	int i;
-	char c;
-	i = 0;
-	c = text[0];
-	while(c != '\0'){
-	spi_send_byte(&mcp2515, c);
-	fprintf(uart, "%c", c);
-	i++;
-	c = text[i];
-	}
-	*/
-	
+	uint64_t data = 255;
 	can_tx(0, data);
 
     while (true)
@@ -88,7 +76,7 @@ int main()
 		
         //fprintf(uart, "[adc] 0x%X 0x%X 0x%X 0x%X\n", adc_values.channel[0], adc_values.channel[1], adc_values.channel[2], adc_values.channel[3]);
         //fprintf(oled, "%X %X %X %X\r\n", adc_values.channel[0], adc_values.channel[1], adc_values.channel[2], adc_values.channel[3]);
-		fprintf(uart, "ok\n");
+		//fprintf(uart, "\nok");
 		
 		/*
 		mcp2515_write(CANINTE, 0x3);

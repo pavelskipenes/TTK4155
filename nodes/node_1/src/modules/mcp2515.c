@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "mcp2515.h"
 #include "spi.h"
 
@@ -27,8 +28,12 @@ uint8_t mcp2515_read(uint8_t address){
 	gpio_set(&mcp2515, GPIO_LOW);
 	spi_send_byte(&mcp2515, 0x03);
 	spi_send_byte(&mcp2515, address);
-	uint8_t data = spi_send_byte(&mcp2515, 0x55); // dummy byte
+	printf("\n read adr: %X", address);
+	
+	uint8_t data = spi_send_byte(&mcp2515, 0xFF); // dummy byte
+	printf("\n%X", data);
 	gpio_set(&mcp2515, GPIO_HIGH);
+	
 	
 	return data;
 }

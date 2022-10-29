@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "gpio.h"
 
 #include <assert.h>
