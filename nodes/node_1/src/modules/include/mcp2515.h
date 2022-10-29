@@ -67,6 +67,8 @@
 #define CANINTE 0x2B // CANINTE.RXnIE enables interrupt on new message
 #define CANINTF 0x2C // source of the interrupt
 
+extern GPIO mcp2515;
+
 
 void mcp2515_init();
 
@@ -82,4 +84,8 @@ uint8_t mcp2515_read_status();
 
 void mcp2515_bit_modify(uint8_t, uint8_t, bool);
 
-extern GPIO mcp2515;
+void mcp2515_set_mode(enum can_mode);
+
+void mcp2515_can_tx(uint16_t, uint64_t);
+
+void mcp2515_can_rx(can_frame);

@@ -13,7 +13,6 @@
 #include "can.h"
 #include "spi.h"
 #include "mcp2515.h"
-#include "can.h"
 
 ISR(BADISR_vect)
 {
@@ -30,13 +29,12 @@ ISR(INT1_vect)
 	frame.rtr = 0;
 	frame.ide = 0;
 	frame.data_length = 8;
+	frame.ack = 0;
 	for (int i = 0; i < 8; i++){
 		frame.data[i] = 0;
 	}
-	// frame.data = {0};
-	frame.ack = 0;
-
-	can_rx(&frame);
+	
+	can.rx(&frame);
 
 	printf("id: 0x%X", frame.id);
 	printf("\ndata: 0x");
@@ -57,16 +55,23 @@ int main()
 	(void)oled;
 
 	adc_init();
-
-
-	mcp2515_init();
-	can_init();
+	
+	can_config can = {
+		.mode = CAN_MODE_LOOPBACK,
+		.ctrl_init = &mcp2515_init,
+		.ctrl_mode = &mcp2515_set_mode,
+		.tx = &mcp2515_can_tx,
+		.rx = &mcp2515_can_rx,
+	};
+	can_init(can);
+	
+	
 
 	cli();
 	sei();
 
-	can_tx(0, 255);
-	can_tx(69, 110);
+	can.tx(0, 255);
+	can.tx(69, 110);
 
 
 
