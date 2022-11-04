@@ -15,6 +15,7 @@ void mcp2515_init(enum can_mode mode)
 	{
 		return;
 	}
+	initialized = true;
 	spi_init();
 	spi_init_slave(&mcp2515);
 	mcp2515_reset();
@@ -66,8 +67,8 @@ uint8_t mcp2515_read_status()
 	uint8_t data;
 	gpio_set(&mcp2515, GPIO_LOW);
 	spi_send_byte(&mcp2515, CAN_INSTRUCTION_READ_STATUS);
-	data = spi_send_byte(&mcp2515, 0x69); // dummy byte
-	data = spi_send_byte(&mcp2515, 0x69); // dummy byte
+	spi_send_byte(&mcp2515, 0x69); 			// dummy byte
+	data = spi_send_byte(&mcp2515, 0x69);	// dummy byte
 	gpio_set(&mcp2515, GPIO_HIGH);
 	return data;
 }
@@ -99,7 +100,6 @@ void mcp2515_can_tx(uint16_t id, uint64_t data)
 	bool rtr = 0;	 // remote transmission request bit // 0 = data frame
 	uint8_t ide = 0; // standard frame
 	bool ack = 1;	 // acknowledge by receiving node
-
 	// using TXB0 - mcp2515 page 20
 	mcp2515_write(TXB0SIDH, (uint8_t)(id >> 3));								 // standard id bits 10:3
 	mcp2515_write(TXB0SIDL, (uint8_t)((uint8_t)((id & 0x7) << 5)) | (ide << 3)); // standard id bits 2:0

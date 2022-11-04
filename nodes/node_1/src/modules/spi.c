@@ -1,18 +1,20 @@
 #include <stdio.h>
-#include "spi.h"
-
 #include <avr/io.h>
+#include <assert.h>
 
+#include "spi.h"
 #include "gpio.h"
+
 
 void spi_init()
 {
 	static bool initialized = false;
     if (initialized)
     {
+        assert(false && "spi already initialized");
         return;
     }	
-	
+	initialized = true;
     /* Set MOSI and SCK output, all others input */
     DDRB |= (GPIO_OUTPUT << PORT4) | (GPIO_OUTPUT << PORT5) | (GPIO_OUTPUT << PORT7);
 

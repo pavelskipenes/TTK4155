@@ -59,13 +59,15 @@ typedef struct can_frame_t
 	uint8_t ack;
 } can_frame;
 
+typedef void (*tx_func_ptr)(uint16_t, uint64_t);
+
 typedef struct can_config_t
 {
 	enum can_mode mode;
 	void (*ctrl_init)(void);
 	void (*ctrl_mode)(enum can_mode);
-	void (*tx)(uint16_t, uint64_t); // frame transmitter
-	void (*rx)(can_frame *);		// frame receiver
+	tx_func_ptr tx; 			// frame transmitter
+	void (*rx)(can_frame *);	// frame receiver
 } can_config;
 
-FILE *can_init(can_config *);
+tx_func_ptr can_init(can_config *);

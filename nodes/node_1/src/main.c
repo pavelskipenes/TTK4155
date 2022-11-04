@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <avr/interrupt.h>
 #include <avr/signature.h>
+#include <avr/io.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <util/delay.h>
@@ -19,17 +20,23 @@ ISR(BADISR_vect)
 	assert(false && "received unhandled interrupt");
 }
 
+// ISR(INT1_vect)
+// {
+// 	assert(false && "CAN frame received");
+// 	printf("[INT] can message received\n");
+// }
+
 int main()
 {
 
 	FILE *uart = usart_init(9600);
 	(void)uart;
 
+	adc_init();
+
 	FILE *oled = oled_init();
 	(void)oled;
 
-	adc_init();
-	
 	can_config config = {
 		.mode = CAN_MODE_LOOPBACK,
 		.ctrl_init = mcp2515_init,
@@ -38,13 +45,16 @@ int main()
 		.rx = mcp2515_can_rx,
 	};
 
-	void (*can_tx)(uint16_t, uint64_t) = can_init(&config);
+	tx_func_ptr can_tx = can_init(&config);
+
+	can_tx(69, 255);
+	// can_tx(0, 111);
 
 	cli();
 	sei();
 
-	can_tx(0, 255);
-	can_tx(69, 111);
+	SREG |= (1 << SREG_I);
+    GICR |= (1 << INT1);
 
 	while (true)
 	{
@@ -53,7 +63,7 @@ int main()
 
 		// fprintf(uart, "[adc] 0x%X 0x%X 0x%X 0x%X\n", adc_values.channel[0], adc_values.channel[1], adc_values.channel[2], adc_values.channel[3]);
 		// fprintf(oled, "%X %X %X %X\r\n", adc_values.channel[0], adc_values.channel[1], adc_values.channel[2], adc_values.channel[3]);
-		fprintf(uart, "\nok");
+		// fprintf(uart, "\nok");
 
 		/*
 		mcp2515_write(CANINTE, 0x3);
@@ -66,6 +76,6 @@ int main()
 		printf("\n%X", mcp2515_read(CANINTE));
 		*/
 
-		_delay_ms(1000);
+		// _delay_ms(1000);
 	}
 }

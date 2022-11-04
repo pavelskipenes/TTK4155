@@ -28,7 +28,7 @@ TARGET_DEVICE := m162
 CC := avr-gcc
 DEFINES := -D __AVR_ATmega162__ -D F_CPU=4912500UL -D __ASSERT_USE_STDERR -D DEBUG
 LD_OPTIONS := --gc-sections#,--print-gc-sections,--defsym=__heap_start=0x801800,--defsym=__heap_end=0x801FFF
-C_OPTIONS := -Os -std=c11 -g3 -Wpadded -Wall -Wextra -Wshadow -Wdouble-promotion -Wformat=2 -Wundef -fno-common -Wconversion -fstack-usage -Wstack-usage=255 -ffunction-sections -fdata-sections
+C_OPTIONS := -O0 -std=c11 -g3 -Wpadded -Wall -Wextra -Wshadow -Wdouble-promotion -Wformat=2 -Wundef -fno-common -Wconversion -fstack-usage -Wstack-usage=255 -ffunction-sections -fdata-sections
 C_FLAGS := $(INCLUDE_DIR) $(SYS_INCLUDE_DIR) -mmcu=$(TARGET_CPU) $(DEFINES) $(C_OPTIONS) -Wl,$(LD_OPTIONS)
 
 .DEFAULT_GOAL := $(BUILD_DIR)$(NAME_EXECUTABLE).hex

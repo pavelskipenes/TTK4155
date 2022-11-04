@@ -3,23 +3,24 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <avr/interrupt.h>
 
 static void (*can_rx)(can_frame *);
 
-FILE *can_init(can_config *config)
+tx_func_ptr can_init(can_config *config)
 {
 	static bool initialized = false;
 	if (initialized)
 	{
 		return;
 	}
+	initialized = true;
 
 	config->ctrl_init();
 	config->ctrl_mode(config->mode);
 
 	can_rx = config->rx;
-
-	return fdevopen(config->tx, NULL);
+	return config->tx;
 }
 
 ISR(INT1_vect)
