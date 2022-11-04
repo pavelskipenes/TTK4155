@@ -22,6 +22,28 @@ void mcp2515_init(enum can_mode mode)
 	
 	// enable interrupt on RX0 and RX1
 	mcp2515_write(CANINTE, 0x3);
+
+
+
+
+	// TODO: set can timing (CNF registers)
+	/*
+	Fosc = 16MHz
+	Tosc = 62.5ns
+
+	brp = Fosc/(2Fbr)
+	Tq = 1
+
+
+
+	*/
+
+	uint8_t sjw = 1; // sync jump width length
+	uint8_t brp = 64; // baud rate prescaler, 125kHz
+	
+	mcp2515_write(CNF1, (sjw << 5)|(brp));
+
+
 }
 
 void mcp2515_reset()

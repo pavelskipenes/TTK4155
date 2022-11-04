@@ -52,9 +52,8 @@ int main()
 
 	cli();
 	sei();
-
 	SREG |= (1 << SREG_I);
-    GICR |= (1 << INT1);
+
 
 	while (true)
 	{
@@ -65,17 +64,8 @@ int main()
 		// fprintf(oled, "%X %X %X %X\r\n", adc_values.channel[0], adc_values.channel[1], adc_values.channel[2], adc_values.channel[3]);
 		// fprintf(uart, "\nok");
 
-		/*
-		mcp2515_write(CANINTE, 0x3);
-		_delay_ms(10);
-		printf("0X%X\n", mcp2515_read(CANINTE));
-		*/
 
-		/*
-		mcp2515_write(CANINTE, 0x3);
-		printf("\n%X", mcp2515_read(CANINTE));
-		*/
 
-		// _delay_ms(1000);
+		_delay_ms(1000);
 	}
 }

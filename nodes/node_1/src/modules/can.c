@@ -4,6 +4,7 @@
 #include <string.h>
 #include <assert.h>
 #include <avr/interrupt.h>
+#include <avr/io.h>
 
 static void (*can_rx)(can_frame *);
 
@@ -15,6 +16,9 @@ tx_func_ptr can_init(can_config *config)
 		return;
 	}
 	initialized = true;
+
+	// enable INT1
+	GICR |= (1 << INT1);
 
 	config->ctrl_init();
 	config->ctrl_mode(config->mode);

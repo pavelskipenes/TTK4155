@@ -8,6 +8,11 @@
 // can control buffer
 #define CANCTRL 0x0F
 
+// can configuration buffers
+#define CNF1 0x2A
+#define CNF2 0x29
+#define CNF3 0x28
+
 // can transmit buffer control
 #define TXB0CTRL 0x30
 #define TXB1CTRL 0x40
