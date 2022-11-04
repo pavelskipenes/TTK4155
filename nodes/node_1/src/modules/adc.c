@@ -3,8 +3,8 @@
 #include <avr/interrupt.h>
 #include <stdbool.h>
 
-#include "timer.h"
 #include "gpio.h"
+#include "timer.h"
 
 static volatile uint8_t *ADC_ADDRESS = (uint8_t *)0x1400;
 static volatile bool adc_busy = true;
@@ -12,12 +12,10 @@ static volatile bool adc_busy = true;
 void adc_init()
 {
     timer_enable_perif_clock();
-    cli();
     // External Interrupt Request 2 Enable page 84
     GICR |= (1 << INT2);
     // Interrupt on rising edge page 85
     EMCUCR |= (1 << ISC2);
-    sei();
 }
 
 ISR(INT2_vect)
@@ -41,6 +39,5 @@ channel_values adc_read()
         .channel[0] = *ADC_ADDRESS,
         .channel[1] = *ADC_ADDRESS,
         .channel[2] = *ADC_ADDRESS,
-        .channel[3] = *ADC_ADDRESS
-        };
+        .channel[3] = *ADC_ADDRESS};
 }

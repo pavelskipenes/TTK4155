@@ -1,20 +1,27 @@
 #pragma once
 
+#include "adc.h"
 #include <stdint.h>
 
-int joystick_8_bit_voltage_to_angle(uint8_t voltage);
-
-struct joystick_position
+struct joystick_t
 {
-    uint8_t x;
-    uint8_t y;
+    int angle_x;
+    int angle_y;
 };
 
-enum joystick_direction
+struct joystick_percent_t
 {
-    NEUTRAL,
-    LEFT,
-    RIGHT,
-    UP,
-    DOWN
+    int8_t percent_x;
+    int8_t percent_y;
 };
+
+struct joystick_config_t
+{
+    uint8_t adc_initial_value_x;
+    uint8_t adc_initial_value_y;
+};
+
+void joystick_init(struct joystick_config_t *);
+
+struct joystick_t joystick_get_angle(uint8_t voltage_x, uint8_t voltage_y);
+struct joystick_percent_t joystick_get_percent(uint8_t voltage_x, uint8_t voltage_y);
