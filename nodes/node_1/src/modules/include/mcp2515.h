@@ -88,4 +88,4 @@ void mcp2515_set_mode(enum can_mode);
 
 void mcp2515_can_tx(uint16_t, uint64_t);
 
-void mcp2515_can_rx(can_frame);
+void mcp2515_can_rx(can_frame *);

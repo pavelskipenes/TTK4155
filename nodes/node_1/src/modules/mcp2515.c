@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "can.h"
 #include "mcp2515.h"
 #include "spi.h"
 
