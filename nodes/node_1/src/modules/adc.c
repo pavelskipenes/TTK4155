@@ -23,7 +23,7 @@ ISR(INT2_vect)
     adc_busy = false;
 }
 
-channel_values adc_read()
+adc_sample adc_read()
 {
     // write to adc starts a sample
     *ADC_ADDRESS = 69;
@@ -31,13 +31,14 @@ channel_values adc_read()
     // booo... AVR does not have wfi
     while (adc_busy)
     {
-        __asm__ __volatile__("nop");
+
     };
     adc_busy = false;
 
-    return (channel_values){
-        .channel[0] = *ADC_ADDRESS,
-        .channel[1] = *ADC_ADDRESS,
-        .channel[2] = *ADC_ADDRESS,
-        .channel[3] = *ADC_ADDRESS};
+    return (adc_sample){
+        .touch_bar_left = *ADC_ADDRESS,
+        .joystick[0] = *ADC_ADDRESS,
+        .joystick[1] = *ADC_ADDRESS,
+        .touch_bar_right = *ADC_ADDRESS,
+    };
 }

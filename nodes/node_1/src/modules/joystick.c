@@ -4,10 +4,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-static int8_t joystick_voltage_offset_x = 0;
-static int8_t joystick_voltage_offset_y = 0;
+static int16_t joystick_adc_offset_x = 0;
+static int16_t joystick_adc_offset_y = 0;
 
-void joystick_init(struct joystick_config_t *config)
+void joystick_init(uint8_t adc_initial_value_x, uint8_t adc_initial_value_y)
 {
     static bool initialized = false;
     if (initialized)
@@ -17,57 +17,46 @@ void joystick_init(struct joystick_config_t *config)
     initialized = true;
 
     // save current readings as zero
-    const float midpoint = 255.0f / 2;
-    joystick_voltage_offset_x = (int8_t)(midpoint - config->adc_initial_value_x);
-    joystick_voltage_offset_y = (int8_t)(midpoint - config->adc_initial_value_y);
+    const float adc_midpoint = 255.0 / 2;
+    joystick_adc_offset_x = (int16_t)(adc_midpoint - adc_initial_value_x);
+    joystick_adc_offset_y = (int16_t)(adc_midpoint - adc_initial_value_y);
 }
 
-/**
- * @brief
- *
- * @param voltage voltage representation from adc using 8 bits.
- * @return
- */
-static int8_t voltage_to_angle(int16_t voltage)
+static int16_t voltage_to_angle(int16_t signed_voltage)
 {
-    // max value * max_multiplier -> 45
-    // min value -> - 45
-    // range <- max - min
-    return (int8_t)(voltage * (90.0f / 255) - 45);
+    int16_t ret = (int16_t)(signed_voltage * (90.0l / 255) - 45);
+    assert(ret >= -100 && ret <= 100);
+    return ret;
 }
 
-static int8_t voltage_to_percent(int16_t voltage)
+static int16_t voltage_to_percent(int16_t signed_voltage)
 {
-
-    return (int8_t)(voltage * (200.0f / 255) - 100);
+    int16_t ret = (int16_t)(signed_voltage * (200.0l / 255) - 100);
+    assert(ret >= -100 && ret <= 100);
+    return ret;
 }
 
-/**
- * @brief get joystick position in degrees.
- * @note adds a static offset calculated by joystick_calibrate()
- * @see joystick_calibrate()
- *
- * @param voltage_x uint8_t horizontal adc value
- * @param voltage_y uint8_t vertical adc value
- *
- * @return struct joystick_t with adjusted values
- */
-struct joystick_t joystick_get_angle(uint8_t voltage_x, uint8_t voltage_y)
+struct joystick_angle_t joystick_get_angle(uint8_t adc_voltage_x, uint8_t adc_voltage_y)
 {
-    struct joystick_t tmp =
+    struct joystick_angle_t tmp =
         {
-            voltage_to_angle(voltage_x + joystick_voltage_offset_x),
-            voltage_to_angle(voltage_y + joystick_voltage_offset_y),
+            voltage_to_angle((int16_t)adc_voltage_x + joystick_adc_offset_x),
+            voltage_to_angle((int16_t)adc_voltage_y + joystick_adc_offset_y),
         };
+    assert(tmp.angle_x >= -45 && tmp.angle_x <= 45);
+    assert(tmp.angle_y >= -45 && tmp.angle_y <= 45);
+
     return tmp;
 }
 
-struct joystick_percent_t joystick_get_percent(uint8_t voltage_x, uint8_t voltage_y)
+struct joystick_percent_t joystick_get_percent(uint8_t adc_voltage_x, uint8_t adc_voltage_y)
 {
     struct joystick_percent_t tmp =
         {
-            voltage_to_percent(voltage_x + joystick_voltage_offset_x),
-            voltage_to_percent(voltage_y + joystick_voltage_offset_y),
+            voltage_to_percent((int16_t)adc_voltage_x + joystick_adc_offset_x),
+            voltage_to_percent((int16_t)adc_voltage_y + joystick_adc_offset_y),
         };
+    assert(tmp.percent_x >= -100 && tmp.percent_x <= 100);
+    assert(tmp.percent_y >= -100 && tmp.percent_y <= 100);
     return tmp;
 }
