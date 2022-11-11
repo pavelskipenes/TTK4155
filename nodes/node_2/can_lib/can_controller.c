@@ -24,9 +24,9 @@
  *
  * \retval Success(0) or failure(1)
  */
-uint8_t can_init_def_tx_rx_mb(uint32_t can_br)
+uint8_t can_init_def_tx_rx_mb(uint32_t can_br, uint32_t can_ph1, uint32_t can_ph2, uint32_t can_prop)
 {
-	return can_init(can_br, 1, 2);
+	return can_init(can_br,can_ph1, can_ph2, can_prop, 1, 2);
 }
 
 /**
@@ -42,8 +42,9 @@ uint8_t can_init_def_tx_rx_mb(uint32_t can_br)
  */
 
 
-uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
+uint8_t can_init(uint32_t can_br, uint32_t can_ph1, uint32_t can_ph2, uint32_t can_prop,  uint8_t num_tx_mb, uint8_t num_rx_mb)
 {
+
 	
 	//Make sure num_rx_mb and num_tx_mb is valid
 	if(num_rx_mb > 8 | num_tx_mb > 8 | num_rx_mb + num_tx_mb > 8)
@@ -79,7 +80,7 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 	PMC->PMC_PCER1 |= 1 << (ID_CAN0 - 32);
 	
 	//Set baudrate, Phase1, phase2 and propagation delay for can bus. Must match on all nodes!
-	CAN0->CAN_BR = can_br; 
+	CAN0->CAN_BR = (CAN_BR_BRP_Pos << can_br) | (CAN_BR_PHASE1_Pos << can_ph1) | (CAN_BR_PHASE2_Pos << can_ph2) | (CAN_BR_PROPAG_Pos << can_prop); 
 	
 
 	/****** Start of mailbox configuration ******/
