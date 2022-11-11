@@ -26,15 +26,14 @@ ISR(INT2_vect)
 
 adc_sample adc_read()
 {
+    adc_busy = true;
     // write to adc starts a sample
     *ADC_ADDRESS = 69;
 
     // booo... AVR does not have wfi
     while (adc_busy)
     {
-
     };
-    adc_busy = false;
 
     return (adc_sample){
         .touch_bar_left = *ADC_ADDRESS,
