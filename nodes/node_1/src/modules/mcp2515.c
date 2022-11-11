@@ -8,7 +8,7 @@ GPIO mcp2515 = {
 	&DDRB,
 	&PORTB};
 
-void mcp2515_init(enum can_mode mode)
+void mcp2515_init()
 {
 	static bool initialized = false;
 	if (initialized)
@@ -29,19 +29,25 @@ void mcp2515_init(enum can_mode mode)
 	// TODO: set can timing (CNF registers)
 	/*
 	Fosc = 16MHz
-	Tosc = 62.5ns
-
+	Fbr = 125kHz
+	
+	Tq = 2Tosc
+	
 	brp = Fosc/(2Fbr)
-	Tq = 1
-
-
 
 	*/
 
 	uint8_t sjw = 1; // sync jump width length
-	uint8_t brp = 64; // baud rate prescaler, 125kHz
+	uint8_t brp = 16; // baud rate prescaler, 500kHz
+	
+	uint8_t btlmode = 1; // PS2 bit time length
+	uint8_t prseg = 2; // propagation segment length
+	uint8_t phseg1 = 7; // PS1 length
+	uint8_t phseg2 = 6; // PS2 length
 	
 	mcp2515_write(CNF1, (sjw << 5)|(brp));
+	mcp2515_write(CNF2, (btlmode << 7)|(phseg1 << 3)|(prseg));
+	mcp2515_write(CNF3, (phseg2));
 
 
 }
