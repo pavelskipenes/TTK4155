@@ -12,7 +12,7 @@
 
 #include "sam.h"
 
-#include "../uart_and_printf/printf-stdarg.h"
+#include "printf-stdarg.h"
 
 
 /**
@@ -80,8 +80,8 @@ uint8_t can_init(uint32_t can_br, uint32_t can_ph1, uint32_t can_ph2, uint32_t c
 	PMC->PMC_PCER1 |= 1 << (ID_CAN0 - 32);
 	
 	//Set baudrate, Phase1, phase2 and propagation delay for can bus. Must match on all nodes!
-	CAN0->CAN_BR = (CAN_BR_BRP_Pos << can_br) | (CAN_BR_PHASE1_Pos << can_ph1) | (CAN_BR_PHASE2_Pos << can_ph2) | (CAN_BR_PROPAG_Pos << can_prop); 
-	
+	CAN0->CAN_BR = (can_br << CAN_BR_BRP_Pos ) | (can_ph1 << CAN_BR_PHASE1_Pos) | (can_ph2 << CAN_BR_PHASE2_Pos) | (can_prop << CAN_BR_PROPAG_Pos); 
+
 
 	/****** Start of mailbox configuration ******/
 
