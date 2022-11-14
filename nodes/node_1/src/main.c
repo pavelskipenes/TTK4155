@@ -7,7 +7,6 @@
 
 #include "adc.h"
 #include "joystick.h"
-#include "oled.h"
 #include "usart.h"
 
 ISR(BADISR_vect)
@@ -17,11 +16,9 @@ ISR(BADISR_vect)
 
 int main()
 {
+
     FILE *uart = usart_init(9600);
     (void)uart;
-
-    FILE *oled = oled_init();
-    (void)oled;
 
     adc_init();
 
@@ -30,14 +27,12 @@ int main()
     sei();
     SREG |= (1 << SREG_I);
 
-    adc_sample sample = adc_read();
-    joystick_init(sample.joystick[JOYSTICK_X], sample.joystick[JOYSTICK_Y]);
-
     while (true)
     {
-        sample = adc_read();
+        adc_sample sample = adc_read();
+
+        fprintf(uart, "ch0:0x%02X ch1:0x%02X ch2:0x%02X ch3:0x%02X\n", sample.joystick[JOYSTICK_X], sample.joystick[JOYSTICK_Y], sample.touch_bar_left, sample.touch_bar_right);
         struct joystick_percent_t joystick = joystick_get_percent(sample.joystick[JOYSTICK_X], sample.joystick[JOYSTICK_Y]);
-        fprintf(uart, "[adc] x: %X y: %X\n", sample.joystick[JOYSTICK_X], sample.joystick[JOYSTICK_Y]);
         fprintf(uart, "[joystick] x: %d y: %d\n", joystick.percent_x, joystick.percent_y);
         _delay_ms(200);
     }
