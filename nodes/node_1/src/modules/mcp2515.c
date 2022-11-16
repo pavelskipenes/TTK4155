@@ -524,7 +524,7 @@ void mcp2515_init()
 	uint8_t phseg2 = 6; // PS2 length
 
 	mcp2515_write(CNF1, (sjw << 6) | (brp - 1));
-	mcp2515_write(CNF2, (btlmode << 7) | (phseg1 - 1 << 3) | (prseg - 1));
+	mcp2515_write(CNF2, (btlmode << 7) | ((phseg1 - 1) << 3) | (prseg - 1));
 	mcp2515_write(CNF3, (phseg2 - 1));
 }
 
@@ -554,7 +554,7 @@ void mcp2515_can_tx(uint16_t id, union can_data data)
 	// frame data
 	for (size_t i = 0; i < 8; ++i)
 	{
-		spi_send_byte(&mcp2515, data.character[i]); // TXB0Di
+		spi_send_byte(&mcp2515, data.bytes[i]); // TXB0Di
 	}
 
 	// set buffer 0 ready for transmission
