@@ -511,21 +511,21 @@ void mcp2515_init()
 	Tq = 2Tosc
 	brp = Fosc/(2Fbr)
 	*/
-	mcp2515_bit_modify(CNF1, 0x03, 0x03); // set T_Q to 500ns and syncreg to 1
-	mcp2515_bit_modify(CNF2, 0xBF, 0xB1); // set PS1 to 7 and propseg to 2
-	mcp2515_bit_modify(CNF3, 0x07, 0x05); // set PS2 to 6
+	// mcp2515_bit_modify(CNF1, 0x03, 0x03); // set T_Q to 500ns and syncreg to 1
+	// mcp2515_bit_modify(CNF2, 0xBF, 0xB1); // set PS1 to 7 and propseg to 2
+	// mcp2515_bit_modify(CNF3, 0x07, 0x05); // set PS2 to 6
 
-	// uint8_t sjw = 1;  // sync jump width length
-	// uint8_t brp = 16; // baud rate prescaler, 500kHz
-	//
-	// uint8_t btlmode = 1; // PS2 bit time length
-	// uint8_t prseg = 2;	 // propagation segment length
-	// uint8_t phseg1 = 7;	 // PS1 length
-	// uint8_t phseg2 = 6;	 // PS2 length
-	//
-	// mcp2515_write(CNF1, (sjw << 5) | (brp));
-	// mcp2515_write(CNF2, (btlmode << 7) | (phseg1 << 3) | (prseg));
-	// mcp2515_write(CNF3, (phseg2));
+	uint8_t sjw = 0;	 // sync jump width length 1 x T_q
+	uint8_t btlmode = 1; // PS2 bit time length
+
+	uint8_t brp = 4;	// baud rate prescaler, 500kHz
+	uint8_t prseg = 2;	// propagation segment length
+	uint8_t phseg1 = 7; // PS1 length
+	uint8_t phseg2 = 6; // PS2 length
+
+	mcp2515_write(CNF1, (sjw << 6) | (brp - 1));
+	mcp2515_write(CNF2, (btlmode << 7) | (phseg1 - 1 << 3) | (prseg - 1));
+	mcp2515_write(CNF3, (phseg2 - 1));
 }
 
 void mcp2515_set_mode(enum can_mode mode)

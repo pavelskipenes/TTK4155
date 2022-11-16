@@ -33,9 +33,9 @@ int main()
 	sei();
 
 	union can_data data = {.bytes = "FUCKFUCK"};
-	_delay_ms(5000);
-	can_tx(0x45, data);
 	while (true)
 	{
+		can_tx(0x00, data);
+		_delay_ms(2);
 	}
 }
