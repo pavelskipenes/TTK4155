@@ -196,7 +196,7 @@ void mcp2515_init()
 
 	// TODO: set can timing (CNF registers)
 	/*
-		Frequency crystal oscilator (F_osc) = 16MHz
+		Frequency crystal oscillator (F_osc) = 16MHz
 		Baud rate of the bus (F_br) = 125kHz
 		time quantum (T_q) = 2*T_osc
 		Baudrate prescaler = F_osc/(2F_br)
