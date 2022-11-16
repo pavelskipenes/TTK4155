@@ -1,7 +1,7 @@
 /*
  * uart.h
  *
- * Author: Gustav O. Often and Eivind H. Jølsgard
+ * Author: Gustav O. Often and Eivind H. Jï¿½lsgard
  *
  * For use in TTK4155 Embedded and Industrial Computer Systems Design
  * NTNU - Norwegian University of Science and Technology
@@ -9,9 +9,7 @@
  * A simple interface for receiving and transmitting characters to a computer using UART via the on board USB-connector
  */ 
 
-
-#ifndef UART_H_
-#define UART_H_
+#pragma once
 
 #include <stdint.h>
 #define UART_RINGBUFFER_SIZE 64
@@ -31,7 +29,3 @@ int uart_getchar(uint8_t *c);
 int uart_putchar(const uint8_t c);
 
 void UART_Handler       ( void );
-
-
-
-#endif /* UART_H_ */

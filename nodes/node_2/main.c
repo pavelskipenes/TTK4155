@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include "printf_stdarg.h"
 #include <stdarg.h>
 #include "uart.h"
 #include "printf-stdarg.h"
