@@ -1,8 +1,8 @@
 #pragma once
 
-#include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #define CAN_STANDARD_MESSAGE_ID_BITS 11 // CAN2.0A
 #define CAN_EXTENDED_MESSAGE_ID_BITS 29 // CAN2.0B
@@ -40,13 +40,11 @@ enum can_mode
 	CAN_MODE_CONFIG
 };
 
-enum can_instruction
+union can_data
 {
-	CAN_INSTRUCTION_WRITE = 0x2,
-	CAN_INSTRUCTION_READ = 0x3,
-	CAN_INSTRUCTION_BIT_MODIFY = 0x5,
-	CAN_INSTRUCTION_READ_STATUS = 0xA0,
-	CAN_INSTRUCTION_RESET = 0xC0,
+	uint8_t bytes[8];
+	char character[8];
+	uint64_t blob;
 };
 
 typedef struct can_frame_t
@@ -55,19 +53,19 @@ typedef struct can_frame_t
 	bool rtr;
 	bool ide;
 	uint8_t data_length;
-	uint8_t data[8];
+	union can_data data;
 	uint8_t ack;
 } can_frame;
 
-typedef void (*tx_func_ptr)(uint16_t, uint64_t);
+typedef void (*tx_func_ptr)(uint16_t id_remote, union can_data data);
 
 typedef struct can_config_t
 {
 	enum can_mode mode;
 	void (*ctrl_init)(void);
 	void (*ctrl_mode)(enum can_mode);
-	tx_func_ptr tx; 			// frame transmitter
-	void (*rx)(can_frame *);	// frame receiver
+	tx_func_ptr tx;			 // frame transmitter
+	void (*rx)(can_frame *); // frame receiver. Not supported
 } can_config;
 
 tx_func_ptr can_init(can_config *);

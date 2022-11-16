@@ -1,20 +1,19 @@
-#include <stdio.h>
-#include <avr/io.h>
 #include <assert.h>
+#include <avr/io.h>
+#include <stdio.h>
 
-#include "spi.h"
 #include "gpio.h"
-
+#include "spi.h"
 
 void spi_init()
 {
-	static bool initialized = false;
+    static bool initialized = false;
     if (initialized)
     {
         assert(false && "spi already initialized");
         return;
-    }	
-	initialized = true;
+    }
+    initialized = true;
     /* Set MOSI and SCK output, all others input */
     DDRB |= (GPIO_OUTPUT << PORT4) | (GPIO_OUTPUT << PORT5) | (GPIO_OUTPUT << PORT7);
 
@@ -27,7 +26,7 @@ void spi_init_slave(GPIO *slave)
     *(slave->ddr) |= (GPIO_OUTPUT << (slave->pin));
 }
 
-uint8_t spi_send_byte(GPIO *slave, uint8_t data)
+uint8_t spi_send_byte(__attribute__((unused)) GPIO *_slave, uint8_t data)
 {
     /* Start transmission */
     SPDR = data;
