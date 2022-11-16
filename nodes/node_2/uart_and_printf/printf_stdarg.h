@@ -1,6 +1,6 @@
 /*
-	Copyright 2001, 2002 Georges Menie (www.menie.org)
-	stdarg version contributed by Christian Ettinger
+    Copyright 2001, 2002 Georges Menie (www.menie.org)
+    stdarg version contributed by Christian Ettinger
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -14,12 +14,5 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
-#ifndef PRINTF-STDARG_H_
-#define PRINTF-STDARG_H_
-
-
+#pragma once
 int printf(const char *format, ...);
-
-
-#endif /* PRINTF-STDARG_H_ */
