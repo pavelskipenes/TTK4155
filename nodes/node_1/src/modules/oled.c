@@ -96,12 +96,14 @@ static int oled_write_char(char character, FILE *fd __attribute__((unused)))
         }
         break;
     default:
+    {
         char8 c = fonts_get_char8(character);
         for (int i = 0; i < 8; i++)
         {
             *s_oled_data = c.segments[i];
             oled_increment_segment_index();
         }
+    }
     }
     return 0;
 }
