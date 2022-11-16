@@ -4,7 +4,6 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <string.h>
-#include <util/delay.h>
 
 #if 0
 #include <avr/interrupt.h>
