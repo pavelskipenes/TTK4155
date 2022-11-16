@@ -52,7 +52,7 @@ clean:
 
 .PHONY: flash
 flash: $(ELF)
-	$(QUITE) openocd -f sam/openocd.cfg -c "program ${BUILD_DIR}/main.elf verify reset exit"
+	$(QUITE) openocd -d0 -f sam/openocd.cfg -c "program ${BUILD_DIR}/main.elf verify reset exit"
 
 # pull in dependencies
 -include	$(OBJS:.o=.d)
