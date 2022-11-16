@@ -1,11 +1,10 @@
-#include "printf_stdarg.h"
 #include <stdarg.h>
-#include "uart.h"
-#include "printf-stdarg.h"
-
-#include "sam.h"
+#include <stdio.h>
 
 #include "can_controller.h"
+#include "printf_stdarg.h"
+#include "sam.h"
+#include "uart.h"
 
 int main()
 {
