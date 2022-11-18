@@ -39,9 +39,11 @@ void mcp2515_init(enum can_mode mode)
 	*/
 
 	uint8_t sjw = 1; // sync jump width length
-	uint8_t brp = 64; // baud rate prescaler, 125kHz
-	
+	uint8_t brp = 16; // baud rate prescaler, 125kHz
+	// 0.5 MHZ
 	mcp2515_write(CNF1, (sjw << 5)|(brp));
+	mcp2515_write(CNF2, );
+	mcp2515_write(CNF3, );
 
 
 }
