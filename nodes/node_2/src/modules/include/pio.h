@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 enum pio_peripheral_t
 {
     PIO_PERIPHERAL_A,
