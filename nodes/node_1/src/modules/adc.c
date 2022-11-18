@@ -13,6 +13,7 @@ static volatile bool adc_busy = true;
 void adc_init()
 {
     memory_init();
+    timer_enable_perif_clock();
     // External Interrupt Request 2 Enable page 84
     GICR |= (1 << INT2);
     // Interrupt on rising edge page 85

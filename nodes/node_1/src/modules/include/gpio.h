@@ -1,6 +1,7 @@
 #pragma once
 #include <stdbool.h>
 #include <stdint.h>
+#include <avr/io.h>
 
 enum gpio_direction
 {

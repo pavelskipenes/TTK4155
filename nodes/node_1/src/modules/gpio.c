@@ -1,4 +1,5 @@
 #include "gpio.h"
+#include <stdio.h>
 
 #include <assert.h>
 
@@ -12,7 +13,7 @@ void gpio_set(GPIO *gpio, enum gpio_state state)
     }
     else
     {
-        *(gpio->port) &= ~(GPIO_LOW << gpio->pin);
+        *(gpio->port) &= ~(uint8_t)(1 << gpio->pin);
     }
 }
 
