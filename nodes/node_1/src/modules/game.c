@@ -4,9 +4,19 @@
 #include "joystick.h"
 #include "oled.h"
 
+enum user_choice
+{
+    UP,
+    DOWN,
+    SELECT,
+    NONE
+};
+
+static enum user_choice wait_for_user_input();
+
 enum state_t game_menu(enum state_t current_state)
 {
-    enum state_t next_state = PLAY;
+    enum state_t next_state = current_state;
     oled_home(current_state);
     bool can_change = true;
     while (true)
@@ -20,8 +30,8 @@ enum state_t game_menu(enum state_t current_state)
             }
             can_change = false;
             printf("UP\n");
-            next_state--;
-            oled_home(next_state);
+            current_state--;
+            oled_home(current_state);
             break;
         case DOWN:
             if (!can_change)
@@ -30,8 +40,8 @@ enum state_t game_menu(enum state_t current_state)
             }
             can_change = false;
             printf("DOWN\n");
-            next_state++;
-            oled_home(next_state);
+            current_state++;
+            oled_home(current_state);
             break;
         case SELECT:
             if (!can_change)
@@ -40,31 +50,28 @@ enum state_t game_menu(enum state_t current_state)
             }
             can_change = false;
             printf("SELECT\n");
-            return next_state;
+            return current_state;
         case NONE:
             can_change = true;
             break;
         }
     }
 
-    return next_state;
+    return current_state;
 }
 
-enum user_choice wait_for_user_input()
+static enum user_choice wait_for_user_input()
 {
-    while (true)
-    {
-        struct adc_sample_t sample = adc_read();
-        struct joystick_percent_t percent = joystick_get_percent(sample.joystick[JOYSTICK_X], sample.joystick[JOYSTICK_Y]);
+    struct adc_sample_t sample = adc_read();
+    struct joystick_percent_t percent = joystick_get_percent(sample.joystick[JOYSTICK_X], sample.joystick[JOYSTICK_Y]);
 
-        if (percent.percent_y > 80)
-        {
-            return UP;
-        }
-        if (percent.percent_y < -80)
-        {
-            return DOWN;
-        }
-        return NONE;
+    if (percent.percent_y > 80)
+    {
+        return UP;
     }
+    if (percent.percent_y < -80)
+    {
+        return DOWN;
+    }
+    return NONE;
 }
