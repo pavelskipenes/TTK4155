@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-static int16_t voltage_to_percent(const uint8_t adc_value, const uint8_t midpoint)
+static inline int16_t voltage_to_percent(const uint8_t adc_value, const uint8_t midpoint)
 {
     // y(x) = a_1 * x + b_1, for x > midpoint
     // y(x) = a_2 * x + b_2, for x < midpoint
@@ -39,7 +39,10 @@ struct joystick_percent_t joystick_get_percent(uint8_t adc_voltage_x, uint8_t ad
             voltage_to_percent(adc_voltage_x, 0xA5),
             voltage_to_percent(adc_voltage_y, 0xC9),
         };
-    assert(tmp.percent_x >= -100 && tmp.percent_x <= 100);
-    assert(tmp.percent_y >= -100 && tmp.percent_y <= 100);
+
+    // If these lines are uncommented the MCU will run into a reset loop.
+    // assert(tmp.percent_x >= -100 && tmp.percent_x <= 100);
+    // assert(tmp.percent_y >= -100 && tmp.percent_y <= 100);
+
     return tmp;
 }

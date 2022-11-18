@@ -7,8 +7,8 @@
 
 typedef struct adc_sample_t
 {
-    uint8_t joystick[2];
     uint8_t touch_bar_left;
+    uint8_t joystick[2];
     uint8_t touch_bar_right;
 } adc_sample;
 
