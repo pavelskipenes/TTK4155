@@ -21,7 +21,7 @@ int main()
     const uint32_t BRP = 42;
     can_init_def_tx_rx_mb(0x165 | ((BRP - 1) << CAN_BR_BRP_Pos));
 
-    pwm_init_pin();
+    pwm_init();
 
     printf("initialization completed\n");
     CAN_MESSAGE msg;

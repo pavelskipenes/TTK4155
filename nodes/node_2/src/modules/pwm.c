@@ -9,7 +9,7 @@
 
 static const uint32_t CLK_PRESCALAR = 1024;
 static const double PERIOD = 20.0 / 1000; // 20ms
-static const F_CHANNEL_5_CLOCK = CHIP_FREQ_CPU_MAX / CLK_PRESCALAR;
+static const double F_CHANNEL_5_CLOCK = CHIP_FREQ_CPU_MAX / CLK_PRESCALAR;
 static const uint32_t CPRD = PERIOD * CHIP_FREQ_CPU_MAX / CLK_PRESCALAR;
 static const double MIN_DUTY_CYCLE = 0.9 / 20;
 static const double MAX_DUTY_CYCLE = 2.1 / 20;

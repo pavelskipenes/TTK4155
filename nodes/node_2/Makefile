@@ -22,6 +22,8 @@ LDFLAGS:= -T$(LDSCRIPT) -mthumb -mcpu=cortex-m3 -Wl,--gc-sections
 CFLAGS:= -mcpu=cortex-m3 -mthumb -ggdb -std=c11 -Wall -Os
 CFLAGS+= $(INCLUDE_DIR)
 CFLAGS+= -D $(TARGET_CPU)
+# do not uncomment if you have epilepsy
+#CFLAGS+= -Wpadded -Wall -Wextra -Wshadow -Wdouble-promotion -Wformat=2 -Wundef -fno-common -Wconversion -fstack-usage -Wstack-usage=255 -ffunction-sections -fdata-sections 
 
 QUITE := @
 
