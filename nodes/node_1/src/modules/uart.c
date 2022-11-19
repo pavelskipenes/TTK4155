@@ -1,9 +1,9 @@
-#include "usart.h"
+#include "uart.h"
 
 #include <avr/io.h>
 #include <stdio.h>
 
-FILE *usart_init(uint16_t baud_rate)
+FILE *uart_init(uint16_t baud_rate)
 {
 
     const uint16_t my_ubrr = (uint16_t)(F_CPU / 16 / (baud_rate - 1));
@@ -23,27 +23,27 @@ FILE *usart_init(uint16_t baud_rate)
     // enable transmit on USART0
     UCSR0B = (1 << TXEN0) | (1 << RXEN0);
 
-    usart_flush_receive_buffer();
+    uart_flush_receive_buffer();
 
-    return fdevopen(usart_put_char, usart_get_char);
+    return fdevopen(uart_put_char, uart_get_char);
 }
 
-int usart_put_char(char character, FILE *fd __attribute__((unused)))
+int uart_put_char(char character, FILE *fd __attribute__((unused)))
 {
     // if UDRE0 bit inside UCSRA0 register is set then transmission can begin
-    while (!(UCSR0A & (1 << UDRE0))){
-
+    while (!(UCSR0A & (1 << UDRE0)))
+    {
     };
     UDR0 = (uint8_t)character;
     return 0;
 }
 
-int usart_get_char(FILE *fd __attribute__((unused)))
+int uart_get_char(FILE *fd __attribute__((unused)))
 {
-    return usart_read_char();
+    return uart_read_char();
 }
 
-void usart_flush_receive_buffer()
+void uart_flush_receive_buffer()
 {
     while (UCSR0A & (1 << RXC0))
     {
@@ -51,7 +51,7 @@ void usart_flush_receive_buffer()
     }
 }
 
-char usart_read_char()
+char uart_read_char()
 {
     while (!(UCSR0A & (1 << RXC0)))
     {

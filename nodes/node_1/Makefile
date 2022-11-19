@@ -1,6 +1,7 @@
 # Options
 SOURCE_DIR := src/
 BUILD_DIR := build/
+DOCS_DIR := docs/
 MODULES_DIR := $(SOURCE_DIR)modules/
 INCLUDE_DIR := $(MODULES_DIR)include
 SYS_INCLUDE_DIR := /usr/avr/include/ /lib/avr/include/
@@ -28,7 +29,7 @@ TARGET_DEVICE := m162
 CC := avr-gcc
 DEFINES := -D __AVR_ATmega162__ -D F_CPU=4912500UL -D __ASSERT_USE_STDERR -D DEBUG
 LD_OPTIONS := --gc-sections#,-u,vfprintf#,--print-gc-sections,--defsym=__heap_start=0x801800,--defsym=__heap_end=0x801FFF
-C_OPTIONS := -std=c11 -g3 -Wpadded -Wall -Wextra -Wshadow -Wdouble-promotion -Wformat=2 -Wundef -fno-common -Wconversion -fstack-usage -Wstack-usage=255 -ffunction-sections -fdata-sections -O0 #-lprintf_flt
+C_OPTIONS := -std=c11 -g3 -Wpadded -Wall -Wextra -Wshadow -Wdouble-promotion -Wformat=2 -Wundef -fno-common -Wconversion -fstack-usage -Wstack-usage=255 -ffunction-sections -fdata-sections -Os #-lprintf_flt
 C_FLAGS := $(INCLUDE_DIR) $(SYS_INCLUDE_DIR) -mmcu=$(TARGET_CPU) $(DEFINES) $(C_OPTIONS) -Wl,$(LD_OPTIONS)
 
 .DEFAULT_GOAL := $(BUILD_DIR)$(NAME_EXECUTABLE).hex
@@ -37,6 +38,9 @@ QUIET := @
 
 $(BUILD_DIR):
 	$(QUIET) mkdir $(BUILD_DIR)
+
+$(DOCS_DIR):
+	$(QUIET) mkdir $(DOCS_DIR)
 
 $(BUILD_DIR)%.o: $(MODULES_DIR)%.c | $(BUILD_DIR)
 #	$(QUIET) echo compiling $(notdir $<)
@@ -62,7 +66,7 @@ flash: $(BUILD_DIR)$(NAME_EXECUTABLE).hex
 
 .PHONY: clean
 clean:
-	$(QUIET) rm -rf $(BUILD_DIR)
+	$(QUIET) rm -rf $(BUILD_DIR) $(DOCS_DIR)
 
 .PHONY: erase
 erase:
@@ -71,3 +75,7 @@ erase:
 .PHONY: check
 check:
 	cppcheck --enable=all $(SOURCE_FILES) $(INCLUDE_DIR) --language=c --platform=avr8 -q $(DEFINES)
+
+.PHONY: docs
+docs: $(DOCS_DIR)
+	doxygen 

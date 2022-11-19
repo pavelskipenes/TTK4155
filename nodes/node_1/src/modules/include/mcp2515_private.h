@@ -12,6 +12,23 @@ GPIO mcp2515 = {
 	&DDRB,
 	&PORTB};
 
+// reception and interrupts are not supported
+#if 0
+void mcp2515_can_rx(can_frame *);
+void handle_interrupt();
+enum mcp2515_interrupt_source
+{
+	CMP2515_INT_RX0_FULL,
+	CMP2515_INT_RX1_FULL,
+	CMP2515_INT_TX0_EMPTY,
+	CMP2515_INT_TX1_EMPTY,
+	CMP2515_INT_TX2_EMPTY,
+	CMP2515_INT_ERROR,
+	CMP2515_INT_WAKE_UP,
+	CMP2515_INT_MESSAGE_ERROR,
+};
+#endif
+
 enum rx_buffer
 {
 	/**

@@ -59,13 +59,33 @@ typedef struct can_frame_t
 
 typedef void (*tx_func_ptr)(uint16_t id_remote, union can_data data);
 
+/**
+ * @brief Config for initializing can module.
+ *
+ * Configure how can module should interface with can transceiver with callbacks. @see config_init()
+ *
+ * @property mode. set can mode. @see enum can_mode
+ * @property ctrl_init. function pointer to can transceiver initializer
+ * @property ctrl_mode. callback function for setting can mode
+ * @property tx. callback function for transmitting can frames to the can bus
+ * @property rx. callback function for handling can frame reception.
+ *
+ * TODO: void* as args for ctrl_init
+ * 
+ */
 typedef struct can_config_t
 {
 	enum can_mode mode;
-	void (*ctrl_init)(void);
-	void (*ctrl_mode)(enum can_mode);
-	tx_func_ptr tx;			 // frame transmitter
-	void (*rx)(can_frame *); // frame receiver. Not supported
+	void (*ctrl_init)(void);		  // can transceiver initialize function pointer
+	void (*ctrl_mode)(enum can_mode); // can transceiver set can_mode callback. @see enum can_mode
+	tx_func_ptr tx;					  // can_data transmit function
+	void (*rx)(can_frame *);		  // can_data receive handler.
 } can_config;
 
-tx_func_ptr can_init(can_config *);
+/**
+ * @brief
+ *
+ * @param config. @see struct can_config_t
+ * @return
+ */
+tx_func_ptr can_init(can_config *config);

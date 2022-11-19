@@ -9,9 +9,9 @@
  */
 #include <stdio.h>
 
-#include "../uart_and_printf/printf_stdarg.h"
 #include "can_controller.h"
 #include "can_interrupt.h"
+#include "printf_stdarg.h"
 #include "sam.h"
 
 #define DEBUG_INTERRUPT 0

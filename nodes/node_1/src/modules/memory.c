@@ -13,14 +13,13 @@ void memory_init()
         return;
     }
     initialized = true;
-    printf("[info]: initializing memory\n");
 
     // enable external memory interface. page 30
     MCUCR |= (1 << SRE);
 
-    // page 32
-    SFIOR |= (1 << XMM2); // mask JTAG ports PORTC 7:4
-
+    // mask JTAG ports PORTC 7:4
+    SFIOR |= (1 << XMM2);
+    printf("[info]: memory initialized\n");
 }
 
 void memory_add_delay()

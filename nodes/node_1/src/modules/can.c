@@ -5,28 +5,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#if 0
-#include <avr/interrupt.h>
-ISR(INT1_vect)
-{
-	// TODO: check source of the interrupt
-
-	handle_interrupt();
-
-	can_frame frame;
-	can_rx(&frame);
-
-	printf("id: 0x%X\t", frame.id);
-	printf("data: 0x");
-	for (int i = 0; i < 8; i++)
-	{
-		printf("%c", frame.data.character[i]);
-	}
-	printf("\n");
-}
-
-static void (*can_rx)(can_frame *);
-#endif
 
 tx_func_ptr can_init(can_config *config)
 {

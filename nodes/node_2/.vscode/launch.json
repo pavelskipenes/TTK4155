@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Node 2",
+            "type": "gdb",
+            "preLaunchTask": "start gdb server",
+            "postDebugTask": "stop gdb server",
+            "request": "attach",
+            "executable": "build/main.elf",
+            "target": "localhost:3333",
+            "remote": true,
+            "cwd": "${workspaceRoot}",
+            "gdbpath": "/usr/bin/arm-none-eabi-gdb",
+            // "autorun": [
+            //     "break main",
+            //     "monitor reset"
+            // ],
+            "stopAtConnect": false,
+            "stopAtEntry": false,
+        }
+    ]
+}

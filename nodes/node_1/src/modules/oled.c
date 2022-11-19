@@ -2,12 +2,13 @@
 
 #include <assert.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <util/delay.h>
 
 #include "fonts.h"
 #include "memory.h"
 
 static int oled_write_char(char character, FILE *fd __attribute__((unused)));
-static void oled_flush();
 static void oled_increment_page_index();
 static void oled_increment_segment_index();
 static void oled_reset_cursor();
@@ -15,10 +16,11 @@ static void oled_set_page_counter(uint8_t page_index);
 static void oled_set_segment_counter(uint8_t segment_index);
 static void oled_write_c(uint8_t command_byte);
 
-static uint8_t s_oled_page_index = 0;
-static uint8_t s_oled_segment_index = 0;
+static uint8_t s_oled_page_index = 0;    // line
+static uint8_t s_oled_segment_index = 0; // column
 static volatile uint8_t *s_oled_cmd = (volatile uint8_t *)0x1000;
 static volatile uint8_t *s_oled_data = (volatile uint8_t *)0x1200;
+static int oled_write_char(char character, FILE *fd __attribute__((unused)));
 
 FILE *oled_init()
 {
@@ -28,9 +30,16 @@ FILE *oled_init()
         assert(!"oled is already initialized");
     }
     initialized = true;
-    printf("[info]: initializing oled\n");
     memory_init();
 
+    oled_reset();
+
+    printf("[info]: oled initialized\n");
+    return fdevopen(oled_write_char, NULL);
+}
+
+void oled_reset()
+{
     // display off
     oled_write_c(0xae);
     // segment remap
@@ -74,8 +83,62 @@ FILE *oled_init()
 
     oled_reset_cursor();
     oled_flush();
+    oled_reset_cursor();
+}
 
-    return fdevopen(oled_write_char, NULL);
+
+
+uint8_t oled_goto_line(uint8_t line)
+{
+    assert(line < OLED_NUM_PAGES);
+    uint8_t last_index = s_oled_page_index;
+    s_oled_page_index = line;
+    oled_set_page_counter(line);
+    return last_index;
+}
+
+void oled_goto_column(uint8_t column)
+{
+    // assuming font size 8.
+    oled_set_segment_counter(column * OLED_NUM_SEGMENTS_PER_PAGE / 8);
+}
+
+void oled_clear_line(uint8_t line)
+{
+    uint8_t old_page_index = s_oled_page_index;
+    oled_goto_line(line);
+
+    char8 c = fonts_get_char8(' ');
+    for (int i = 0; i < 8; i++)
+    {
+        *s_oled_data = c.segments[i];
+        oled_increment_segment_index();
+    }
+    oled_goto_line(old_page_index);
+}
+
+void oled_pos(uint8_t row, uint8_t column)
+{
+    oled_goto_line(row);
+    oled_goto_column(column);
+}
+
+void oled_print_character(char chr)
+{
+    char8 c = fonts_get_char8(chr);
+    for (int i = 0; i < 8; i++)
+    {
+        *s_oled_data = c.segments[i];
+        oled_increment_segment_index();
+    }
+}
+
+void oled_print(char *character)
+{
+    while (*character)
+    {
+        oled_write_char(*character++, NULL);
+    }
 }
 
 static int oled_write_char(char character, FILE *fd __attribute__((unused)))
@@ -136,6 +199,7 @@ static void oled_reset_cursor()
 static void oled_set_segment_counter(uint8_t segment_index)
 {
     assert(segment_index < 128);
+    s_oled_segment_index = segment_index;
     oled_write_c(0x21);
     oled_write_c(segment_index);
     oled_write_c(127);
@@ -144,12 +208,13 @@ static void oled_set_segment_counter(uint8_t segment_index)
 static void oled_set_page_counter(uint8_t page_index)
 {
     assert(page_index < 8);
+    s_oled_page_index = page_index;
     oled_write_c(0x22);
     oled_write_c(page_index);
     oled_write_c(7);
 }
 
-static void oled_flush()
+void oled_flush()
 {
     for (int i = 0; i < OLED_NUM_SEGMENTS_PER_PAGE * OLED_NUM_PAGES; i++)
     {
