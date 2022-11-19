@@ -30,4 +30,10 @@ typedef struct character4
 
 #define CHAR_TO_INDEX(X) X - ' '
 
+/**
+ * @brief get font bytes for display outputs
+ *
+ * @param c character of interest
+ * @return pixel array of character
+ */
 char8 fonts_get_char8(char c);

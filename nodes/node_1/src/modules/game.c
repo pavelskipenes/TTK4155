@@ -4,6 +4,8 @@
 #include "joystick.h"
 #include "oled.h"
 
+#include <avr/io.h>
+
 enum user_choice
 {
     UP,
@@ -12,16 +14,30 @@ enum user_choice
     NONE
 };
 
-static enum user_choice wait_for_user_input();
+static enum user_choice get_for_user_input();
+
+void game_home(uint8_t selection_index)
+{
+    oled_reset();
+    oled_print("Main menu\n\r");
+    oled_print("\n\r");
+    oled_print("\n\r");
+    oled_print("   Play\n\r");
+    oled_print("   High score\n\r");
+    oled_print("   Restart?\n\r");
+
+    oled_goto_line(selection_index + 3);
+    oled_print("->");
+}
 
 enum state_t game_menu(enum state_t current_state)
 {
     enum state_t next_state = current_state;
-    oled_home(current_state);
+    game_home(current_state);
     bool can_change = true;
     while (true)
     {
-        switch (wait_for_user_input())
+        switch (get_for_user_input())
         {
         case UP:
             if (!can_change)
@@ -31,7 +47,7 @@ enum state_t game_menu(enum state_t current_state)
             can_change = false;
             printf("UP\n");
             current_state--;
-            oled_home(current_state);
+            game_home(current_state);
             break;
         case DOWN:
             if (!can_change)
@@ -41,9 +57,10 @@ enum state_t game_menu(enum state_t current_state)
             can_change = false;
             printf("DOWN\n");
             current_state++;
-            oled_home(current_state);
+            game_home(current_state);
             break;
         case SELECT:
+
             if (!can_change)
             {
                 break;
@@ -60,10 +77,10 @@ enum state_t game_menu(enum state_t current_state)
     return current_state;
 }
 
-static enum user_choice wait_for_user_input()
+static enum user_choice get_for_user_input()
 {
     struct adc_sample_t sample = adc_read();
-    struct joystick_percent_t percent = joystick_get_percent(sample.joystick[JOYSTICK_X], sample.joystick[JOYSTICK_Y]);
+    struct joystick_percent_t percent = joystick_get_percent(sample.joystick[ADC_JOYSTICK_X], sample.joystick[ADC_JOYSTICK_Y]);
 
     if (percent.percent_y > 80)
     {
@@ -72,6 +89,6 @@ static enum user_choice wait_for_user_input()
     if (percent.percent_y < -80)
     {
         return DOWN;
-    }
+    };
     return NONE;
 }

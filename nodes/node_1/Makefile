@@ -1,6 +1,7 @@
 # Options
 SOURCE_DIR := src/
 BUILD_DIR := build/
+DOCS_DIR := docs/
 MODULES_DIR := $(SOURCE_DIR)modules/
 INCLUDE_DIR := $(MODULES_DIR)include
 SYS_INCLUDE_DIR := /usr/avr/include/ /lib/avr/include/
@@ -38,6 +39,9 @@ QUIET := @
 $(BUILD_DIR):
 	$(QUIET) mkdir $(BUILD_DIR)
 
+$(DOCS_DIR):
+	$(QUIET) mkdir $(DOCS_DIR)
+
 $(BUILD_DIR)%.o: $(MODULES_DIR)%.c | $(BUILD_DIR)
 #	$(QUIET) echo compiling $(notdir $<)
 	$(QUIET) $(CC) $< $(C_FLAGS) -c -o $@
@@ -62,7 +66,7 @@ flash: $(BUILD_DIR)$(NAME_EXECUTABLE).hex
 
 .PHONY: clean
 clean:
-	$(QUIET) rm -rf $(BUILD_DIR)
+	$(QUIET) rm -rf $(BUILD_DIR) $(DOCS_DIR)
 
 .PHONY: erase
 erase:
@@ -71,3 +75,7 @@ erase:
 .PHONY: check
 check:
 	cppcheck --enable=all $(SOURCE_FILES) $(INCLUDE_DIR) --language=c --platform=avr8 -q $(DEFINES)
+
+.PHONY: docs
+docs: $(DOCS_DIR)
+	doxygen 

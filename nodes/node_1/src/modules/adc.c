@@ -40,7 +40,7 @@ adc_sample adc_read()
     return (adc_sample){
         .touch_bar_left = *ADC_ADDRESS,
         .touch_bar_right = *ADC_ADDRESS,
-        .joystick[JOYSTICK_X] = *ADC_ADDRESS,
-        .joystick[JOYSTICK_Y] = *ADC_ADDRESS,
+        .joystick[ADC_JOYSTICK_X] = *ADC_ADDRESS,
+        .joystick[ADC_JOYSTICK_Y] = *ADC_ADDRESS,
     };
 }

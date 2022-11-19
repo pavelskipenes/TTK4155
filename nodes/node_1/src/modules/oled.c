@@ -86,19 +86,7 @@ void oled_reset()
     oled_reset_cursor();
 }
 
-void oled_home(uint8_t selection_index)
-{
-    oled_reset();
-    oled_print("Main menu\n\r");
-    oled_print("\n\r");
-    oled_print("\n\r");
-    oled_print("   Play\n\r");
-    oled_print("   High score\n\r");
-    oled_print("   Restart?\n\r");
 
-    oled_goto_line(selection_index + 3);
-    oled_print("->");
-}
 
 uint8_t oled_goto_line(uint8_t line)
 {

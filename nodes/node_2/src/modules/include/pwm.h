@@ -1,7 +1,18 @@
 #pragma once
 
-#include "pio.h"
+/**
+ * @brief Initialize pin C19 as PWM output.
+ *
+ * left aligned inverted signal.
+ *
+ */
+void pwm_init();
 
-void pwm_init_pin(double period, double duty_cycle);
-void pwm_servo_set_pos(uint8_t pos, uint8_t channel);
-void pwm_set_duty_cycle(uint8_t duty_cycle, uint8_t channel);
+/**
+ * @brief
+ *
+ * @param duty_cycle in milliseconds.
+ *
+ * @note Accepts only values between 0.045 and 0.105. Values outside this range will be transformed to to closest valid value.
+ */
+void pwm_set_duty_cycle(double duty_cycle);

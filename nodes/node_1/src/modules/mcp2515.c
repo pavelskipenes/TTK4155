@@ -7,6 +7,29 @@
 
 #if 0
 
+#if 0
+#include <avr/interrupt.h>
+ISR(INT1_vect)
+{
+	// TODO: check source of the interrupt
+
+	handle_interrupt();
+
+	can_frame frame;
+	can_rx(&frame);
+
+	printf("id: 0x%X\t", frame.id);
+	printf("data: 0x");
+	for (int i = 0; i < 8; i++)
+	{
+		printf("%c", frame.data.character[i]);
+	}
+	printf("\n");
+}
+
+static void (*can_rx)(can_frame *);
+#endif
+
 #define INTERRUPT_MASK 0b1110
 #define INTERRUPT_ERROR 0b0010	 // Error Interrupt
 #define INTERRUPT_WAKE_UP 0b0100 // Wake-up Interrupt
@@ -194,7 +217,6 @@ void mcp2515_init()
 	spi_init_slave(&mcp2515);
 	mcp2515_reset();
 
-	// TODO: set can timing (CNF registers)
 	/*
 		Frequency crystal oscillator (F_osc) = 16MHz
 		Baud rate of the bus (F_br) = 125kHz

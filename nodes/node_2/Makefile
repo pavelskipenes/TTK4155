@@ -2,10 +2,10 @@ SOURCE_DIR := src/
 BUILD_DIR := build/
 MODULES_DIR := $(SOURCE_DIR)modules/
 INCLUDE_DIR := $(MODULES_DIR)include vendor/sam/sam3x/include vendor/sam/sam3x/source vendor/sam/interrupt vendor/sam/cmsis vendor/sam
-SYS_INCLUDE_DIR := /usr/avr/include/ /lib/avr/include/
 
 SOURCE_FILES := $(foreach sdir,$(SOURCE_DIR),$(wildcard $(sdir)*.c))
 SOURCE_FILES += $(foreach sdir,$(MODULES_DIR),$(wildcard $(sdir)*.c))
+CPPCHECK_SRC := $(SOURCE_FILES)
 SOURCE_FILES += $(foreach sdir,vendor/sam/sam3x/source/,$(wildcard $(sdir)*.c))
 OBJECT_FILES := $(subst $(MODULES_DIR),$(BUILD_DIR),$(SOURCE_FILES:.c=.o))
 OBJECT_FILES := $(subst $(SOURCE_DIR),$(BUILD_DIR),$(OBJECT_FILES))
@@ -19,7 +19,7 @@ AS:=arm-none-eabi-as
 LDSCRIPT = vendor/sam/flash.ld
 TARGET_CPU = __SAM3X8E__
 LDFLAGS:= -T$(LDSCRIPT) -mthumb -mcpu=cortex-m3 -Wl,--gc-sections
-CFLAGS:= -mcpu=cortex-m3 -mthumb -ggdb -std=c11 -Wall
+CFLAGS:= -mcpu=cortex-m3 -mthumb -ggdb -std=c11 -Wall -Os
 CFLAGS+= $(INCLUDE_DIR)
 CFLAGS+= -D $(TARGET_CPU)
 
@@ -41,9 +41,16 @@ $(ELF) : $(OBJECT_FILES) | $(BUILD_DIR)
 
 .PHONY: clean
 clean:
-	$(QUITE) rm -rf $(BUILD_DIR)
+	$(QUIET) rm -rf $(BUILD_DIR) $(DOCS_DIR)
 
 .PHONY: flash
 flash: $(ELF)
-	$(QUITE) openocd -d0 -f vendor/sam/openocd.cfg -c "exit"
+	$(QUITE) openocd -d0 -f vendor/sam/openocd.cfg -c "program $(ELF) reset exit"
 
+.PHONY: check
+check:
+	cppcheck --enable=all $(CPPCHECK_SRC) $(INCLUDE_DIR) --language=c -q $(TARGET_CPU)
+
+.PHONY: docs
+docs: $(DOCS_DIR)
+	doxygen 

@@ -5,25 +5,26 @@
 #include "can.h"
 #include "gpio.h"
 
-extern GPIO mcp2515;
+// extern GPIO mcp2515;
 
+/**
+ * @brief Initialize mcp2515 can transceiver
+ *
+ */
 void mcp2515_init();
+
+/**
+ * @brief can transmit handler
+ *
+ * @param id of the receiver
+ * @param data payload
+ */
 void mcp2515_can_tx(uint16_t id, union can_data data);
+
+/**
+ * @brief change can mode
+ * @see enum can_mode
+ *
+ */
 void mcp2515_set_mode(enum can_mode);
 
-// reception and interrupts are not supported
-#if 0
-void mcp2515_can_rx(can_frame *);
-void handle_interrupt();
-enum mcp2515_interrupt_source
-{
-	CMP2515_INT_RX0_FULL,
-	CMP2515_INT_RX1_FULL,
-	CMP2515_INT_TX0_EMPTY,
-	CMP2515_INT_TX1_EMPTY,
-	CMP2515_INT_TX2_EMPTY,
-	CMP2515_INT_ERROR,
-	CMP2515_INT_WAKE_UP,
-	CMP2515_INT_MESSAGE_ERROR,
-};
-#endif
