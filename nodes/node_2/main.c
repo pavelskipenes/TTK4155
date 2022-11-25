@@ -29,6 +29,10 @@ int main()
 	uint16_t speed = 500; 
 	uint8_t direction = 1;
 	uint16_t position = 0;
+
+	
+	PIOA->PIO_OER |= (1 << SOLENOID_PIN); // output enable register on pin 2
+	PIOA->PIO_SODR |= (1 << SOLENOID_PIN); // Set output data register
 	
 	motor_init();
 	motor_set_speed(speed);
@@ -36,27 +40,13 @@ int main()
 	
 	while(1){
 		
-		motor_set_position(0);
-		motor_set_position(3000);
-		motor_set_position(32000);
-		motor_set_speed(speed);
-		speed += 100;
-		
-	}
-	
-		
-	
-	
-	PIOA->PIO_OER |= (1 << SOLENOID_PIN); // output enable register on pin 2
-	PIOA->PIO_SODR |= (1 << SOLENOID_PIN); // Set output data register
-	
-	while(1){
-		
+		motor_set_direction(1);
 		PIOA->PIO_CODR |= (1 << SOLENOID_PIN);
-
 		PIOA->PIO_SODR |= (1 << SOLENOID_PIN);
-
+		motor_set_direction(0);
+		
 	}
+	
 	
 	// testing some motor-control: 
 	

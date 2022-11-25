@@ -112,10 +112,5 @@ uint16_t motor_read_encoder(){
 	
 	PIOD->PIO_SODR |= NOT_OE;
 
-	
-	uint16_t BYTES = (HIGH_BYTE << 8) | LOW_BYTE;
-	if (BYTES & (1 << 15)) {
-		return ((uint16_t) (~BYTES) + 1);
-	}
-	return -BYTES;
+	return ((HIGH_BYTE << 8) | LOW_BYTE);
 }
