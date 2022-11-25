@@ -6,6 +6,8 @@
 #include "sam.h"
 
 #include "can_controller.h"
+#include "motor_controller.h"
+#include "PI_controller.h"
 
 int main()
 {
@@ -20,6 +22,43 @@ int main()
 	uint32_t can_ph1 = 7;
 	uint32_t can_ph2 = 6;
 	uint32_t can_prop = 2;
+	uint8_t SOLENOID_PIN = 14;
+
+	
+	// uint8_t DO0 - DO7 = PIN33 - PIN40; = PC1 - PC8;
+	uint16_t speed = 500; 
+	uint8_t direction = 1;
+	uint16_t position = 0;
+	
+	motor_init();
+	motor_set_speed(speed);
+	motor_start();
+	
+	while(1){
+		
+		motor_set_position(0);
+		motor_set_position(3000);
+		motor_set_position(32000);
+		motor_set_speed(speed);
+		speed += 100;
+		
+	}
+	
+		
+	
+	
+	PIOA->PIO_OER |= (1 << SOLENOID_PIN); // output enable register on pin 2
+	PIOA->PIO_SODR |= (1 << SOLENOID_PIN); // Set output data register
+	
+	while(1){
+		
+		PIOA->PIO_CODR |= (1 << SOLENOID_PIN);
+
+		PIOA->PIO_SODR |= (1 << SOLENOID_PIN);
+
+	}
+	
+	// testing some motor-control: 
 	
 	uint16_t msg_id = 0;
 	char data[8] = "1234567";
@@ -44,10 +83,11 @@ int main()
 		
 		for (int i = 0; i < 8; i++)
 		{
-			printf("%d\n\r", msg.data[i]);
+			printf("%d\n", msg.data[i]);
 		}
 	
 	}
+	
 	
 	
 }
